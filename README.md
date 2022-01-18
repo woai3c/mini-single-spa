@@ -1,2 +1,2 @@
-# single-spa-demo
-single-spa-demo
+# mini-single-spa
+mini-single-spa
