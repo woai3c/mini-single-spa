@@ -9,7 +9,7 @@ export function isPromise(func: any) {
 export async function parseHTMLandLoadScripts(url: string) {
     const html = await loadHtml(url)
     const scripts = parse(html).querySelectorAll('script')
-    const promise = scripts.map(script => loadScript(script.attrs.src))
+    const promise = scripts.map(script => script.attrs.src && loadScript(script.attrs.src))
     await Promise.all(promise)
 }
 
