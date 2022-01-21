@@ -11,7 +11,7 @@ const resolveFile = function (filePath) {
     return path.join(__dirname, filePath)
 }
 
-const pluginName = 'single-spa'
+const pluginName = 'mini-single-spa'
 function getOptions(mode) {
     const result = {
         input: resolveFile('src/index.ts'),
@@ -19,7 +19,7 @@ function getOptions(mode) {
             file: resolveFile(`dist/${pluginName}.${mode}.js`),
             format: mode,
             sourcemap: true,
-            name: 'SingleSPA',
+            name: 'MiniSingleSPA',
         },
         plugins: [
             resolve(),
