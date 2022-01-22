@@ -7,8 +7,7 @@ import store from './store'
 Vue.config.productionTip = false
 
 let router = null
-let instance = null
-
+let app = null
 function render(props = {}) {
     const { container } = props
     router = new VueRouter({
@@ -17,7 +16,7 @@ function render(props = {}) {
         routes,
     })
     
-    instance = new Vue({
+    app = new Vue({
         router,
         store,
         render: h => h(App),
@@ -49,8 +48,8 @@ export async function mount(props) {
 }
 
 export async function unmount() {
-    instance.$destroy()
-    instance.$el.innerHTML = ''
-    instance = null
+    app.$destroy()
+    app.$el.innerHTML = ''
+    app = null
     router = null
 }

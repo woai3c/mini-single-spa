@@ -2,12 +2,12 @@ lockfileVersion: 5.3
 
 specifiers:
   '@vue/cli-service': ^4.5.0
-  mini-single-spa: ^0.1.0
+  mini-single-spa: ^0.2.3
   vue: ^2.6.11
   vue-template-compiler: ^2.6.11
 
 dependencies:
-  mini-single-spa: 0.1.0
+  mini-single-spa: 0.2.3
   vue: 2.6.14
 
 devDependencies:
@@ -3867,8 +3867,8 @@ packages:
       webpack-sources: 1.4.3
     dev: true
 
-  /mini-single-spa/0.1.0:
-    resolution: {integrity: sha512-tX7TDHfcg/FI1gDmTvXRINp1C/ikwq5jI0kWm1O1rZb3ymKm3ye2pK5hvV7auFNi1MEEjtf2WtJDv5XColplDQ==}
+  /mini-single-spa/0.2.3:
+    resolution: {integrity: sha512-d1sOt9jMdm37Wm1ZsqZpEgf31RJk4t/IzEVBBrpQzT6l2Nkgn67Ob7239UJq+OpCxSfjbKIWcXESCzVLZtKGZg==}
     dev: false
 
   /minimalistic-assert/1.0.1:

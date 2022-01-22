@@ -7,7 +7,7 @@
     "build": "vue-cli-service build"
   },
   "dependencies": {
-    "mini-single-spa": "^0.1.0",
+    "mini-single-spa": "^0.2.3",
     "vue": "^2.6.11"
   },
   "devDependencies": {
