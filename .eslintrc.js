@@ -61,5 +61,6 @@ module.exports = {
         'import/no-useless-path-segments': 'off',
         'import/newline-after-import': 'off',
         'no-path-concat': 'off',
+        'no-useless-catch': 'off',
     },
 }
