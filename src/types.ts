@@ -17,7 +17,7 @@ export interface Application {
     name: string
     activeRule: Function | string
     customProps: AnyObject
-    host?: string
+    pageEntry?: string
     status?: AppStatus
     loadApp: () => Promise<any>
     bootstrap?: () => Promise<any>

@@ -1,9 +1,16 @@
-import { isPromise } from 'src/utils'
+import { isPromise } from 'src/utils/utils'
+import parseHTMLandloadSources from 'src/utils/parseHTMLandloadSources'
 import { Application, AppStatus } from '../types'
 
 export default async function bootstrapApp(app: Application) {
-    const { bootstrap, mount, unmount } = await app.loadApp()
+    try {
+        // 加载 js css
+        await parseHTMLandloadSources(app.pageEntry as string)
+    } catch (error) {
+        throw error
+    }
     
+    const { bootstrap, mount, unmount } = await app.loadApp()
     if (isPromise(bootstrap) && isPromise(mount) && isPromise(unmount)) {
         throw Error('The lifecycle function must be a Promise')
     }
