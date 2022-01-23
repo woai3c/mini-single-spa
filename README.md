@@ -1,6 +1,10 @@
 # mini-single-spa
 一个微前端教学项目
 
+## 功能
+* 支持不同框架的子应用
+* 样式作用域隔离
+
 ## Examples
 所有示例均在 examples 目录下。
 #### simple example
