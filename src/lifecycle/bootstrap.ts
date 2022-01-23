@@ -1,6 +1,6 @@
-import { isPromise } from 'src/utils/utils'
 import parseHTMLandloadSources from 'src/utils/parseHTMLandloadSources'
-import { Application, AppStatus } from '../types'
+import { isPromise } from 'src/utils/utils'
+import { AnyObject, Application, AppStatus } from '../types'
 
 export default async function bootstrapApp(app: Application) {
     try {
@@ -11,15 +11,34 @@ export default async function bootstrapApp(app: Application) {
     }
     
     const { bootstrap, mount, unmount } = await app.loadApp()
-    if (isPromise(bootstrap) && isPromise(mount) && isPromise(unmount)) {
-        throw Error('The lifecycle function must be a Promise')
-    }
+
+    validateLifeCycleFunc('bootstrap', bootstrap)
+    validateLifeCycleFunc('mount', mount)
+    validateLifeCycleFunc('unmount', unmount)
 
     app.bootstrap = bootstrap
     app.mount = mount
     app.unmount = unmount
+    app.customProps = await getProps(app.customProps)
     
-    return (app as any).bootstrap().then(() => {
+    let result = (app as any).bootstrap(app.customProps)
+    if (!isPromise(result)) {
+        result = Promise.resolve(result)
+    }
+    
+    return result.then(() => {
         app.status = AppStatus.BOOTSTRAPPED
     })
+}
+
+async function getProps(props: Function | AnyObject) {
+    if (typeof props === 'function') return props()
+    if (typeof props === 'object') return props
+    return {}
+}
+
+function validateLifeCycleFunc(name: string, fn: any) {
+    if (typeof fn !== 'function') {
+        throw Error(`The "${name}" must be a function`)
+    }
 }

@@ -40,10 +40,10 @@
             name: 'vue',
             loadApp() {
                 return Promise.resolve({
-                    async bootstrap() {
+                    bootstrap() {
                         console.log('vue bootstrap')
                     },
-                    async mount() {
+                    mount() {
                         console.log('vue mount')
                         vueApp = Vue.createApp({
                             data() {
@@ -61,7 +61,7 @@
                         
                         vueApp.mount('#app')
                     },
-                    async unmount() {
+                    unmount() {
                         console.log('vue unmount')
                         vueApp.unmount()
                     },
@@ -96,17 +96,17 @@
             name: 'react',
             loadApp() { 
                 return Promise.resolve({
-                    async bootstrap() {
+                    bootstrap() {
                         console.log('react bootstrap')
                     },
-                    async mount() {
+                    mount() {
                         console.log('react mount')
                         ReactDOM.render(
                             React.createElement(LikeButton),
                             $('#app')
                         );
                     },
-                    async unmount() {
+                    unmount() {
                         console.log('react unmount')
                         ReactDOM.unmountComponentAtNode($('#app'));
                     },

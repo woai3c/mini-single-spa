@@ -16,11 +16,11 @@ export enum AppStatus {
 export interface Application {
     name: string
     activeRule: Function | string
-    customProps: AnyObject
+    customProps: Function | AnyObject
     pageEntry?: string
     status?: AppStatus
     loadApp: () => Promise<any>
-    bootstrap?: () => Promise<any>
+    bootstrap?: (props: AnyObject) => Promise<any>
     mount?: (props: AnyObject) => Promise<any>
     unmount?: (props: AnyObject) => Promise<any>
 }
