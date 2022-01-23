@@ -4,6 +4,13 @@ function isCorrectURL(url = '') {
     return reg.test(url)
 }
 
+// 匹配域名
+const hostReg = /(?<=:\/\/)[^/]*/
+function getHost(url: string) {
+    const result = url.match(hostReg)
+    return result ? result[0] : ''
+}
+
 const hasLoadedURLs: string[] = []
 export default async function parseHTMLandloadSources(url: string) {
     if (!isCorrectURL(url)) return
@@ -26,11 +33,18 @@ export default async function parseHTMLandloadSources(url: string) {
         }
     }).filter(Boolean)
 
+    const host = getHost(url)
     const linkPromises = Array.from(doc.querySelectorAll('link')).map(link => {
         const href = link.href
-        // 1. preload 的资源一般和真正的资源成对出现, https://woai3c.github.io/Front-end-basic-knowledge/js.html#preload%E5%92%8Cprefetch
+        // 1. preload 的资源一般和真正的资源成对出现, 因此不需要加载含有 preload 的资源
         // 2. 防止加载重复的 url
-        if (link.rel !== 'preload' && href && !hasLoadedURLs.includes(href)) {
+        // 3. 只加载与子应用域名一致的 url
+        if (
+            href
+            && href.includes(host)
+            && link.rel !== 'preload'
+            && !hasLoadedURLs.includes(href)
+        ) {
             hasLoadedURLs.push(href)
             return loadLink(href, link.attributes)
         }
@@ -88,6 +102,6 @@ export async function syncLoadScripts(urls: string[]) {
             head.appendChild(script)
         })
     } catch (error) {
-        return error
+        throw error
     }
 }
