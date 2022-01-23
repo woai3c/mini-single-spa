@@ -2,7 +2,8 @@
   "name": "mini-single-spa",
   "version": "0.2.6",
   "description": "mini-single-spa",
-  "main": "dist/mini-single-spa.esm.js",
+  "main": "dist/mini-single-spa.cjs.js",
+  "module": "dist/mini-single-spa.esm.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "lint": "eslint --ext .js,.ts,.d.ts src/",
@@ -27,6 +28,11 @@
     "src/**/*.{js,ts}": "eslint"
   },
   "devDependencies": {
+    "@babel/core": "^7.15.5",
+    "@babel/plugin-transform-runtime": "^7.15.0",
+    "@babel/preset-env": "^7.16.11",
+    "@babel/runtime": "^7.16.7",
+    "@rollup/plugin-babel": "^5.3.0",
     "@rollup/plugin-commonjs": "^21.0.1",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^13.1.3",
