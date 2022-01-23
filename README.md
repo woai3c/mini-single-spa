@@ -2,26 +2,13 @@
 一个微前端教学项目
 
 ## 使用
-### 安装依赖
+### 安装
 ```
-npm i
-# or
-pnpm i
-```
-### 开发
-```
-npm run dev
-# or
-pnpm dev
+npm i mini-single-spa
 ```
 
-### 打包
-```
-npm run build
-# or
-pnpm build
-```
-## 文档
+### 主应用
+在主应用上注册子应用
 ```js
 import { registerApplication, start } from 'mini-single-spa'
 
@@ -36,6 +23,9 @@ registerApplication({
 start()
 ```
 首先使用 `registerApplication()` 注册所有的子应用，然后执行 `start()` 启动。
+
+### 子应用
+
 ### registerApplication(Application)
 `registerApplication(Application)` 接收的参数如下：
 ```ts
