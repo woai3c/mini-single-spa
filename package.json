@@ -1,6 +1,6 @@
 {
   "name": "mini-single-spa",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "mini-single-spa",
   "main": "dist/mini-single-spa.esm.js",
   "types": "dist/index.d.ts",
