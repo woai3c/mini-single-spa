@@ -10,7 +10,7 @@ export default async function parseHTMLandloadSources(url: string) {
     
     let html: string
     try {
-        html = await loadSourceText(url)
+        html = await loadSourceText(url) // load html
     } catch (error) {
         throw error
     }
@@ -36,7 +36,7 @@ export default async function parseHTMLandloadSources(url: string) {
         }
     }).filter(Boolean)
     
-    // 异步加载 link 标签，同步加载 script 标签，保证 js 脚本的执行顺序
+    // 异步加载 link script 标签，顺序执行 js
     return Promise.all([...linkPromises, syncLoadScripts(scripts as string[])])
 }
 
@@ -77,7 +77,7 @@ export function loadLink(url: string, attrs: NamedNodeMap) {
     })
 }
 
-// 异步加载 js 资源，再按顺序同步执行
+// 异步加载 js 资源，顺序执行
 export async function syncLoadScripts(urls: string[]) {
     try {
         const scriptTexts = await Promise.all(urls.map(url => loadSourceText(url)))
