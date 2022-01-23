@@ -21,3 +21,9 @@ export default {
   }
 }
 </script>
+
+<style>
+#app {
+  color: lightgreen;
+}
+</style>
