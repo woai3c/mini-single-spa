@@ -3,3 +3,7 @@ export function isPromise(fn: any) {
         return true
     }
 }
+
+export function $(selector: string) {
+    return document.querySelector(selector)
+}

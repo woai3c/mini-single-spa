@@ -1,8 +1,11 @@
 import parseHTMLandloadSources from 'src/utils/parseHTMLandloadSources'
 import { isPromise } from 'src/utils/utils'
 import { AnyObject, Application, AppStatus } from '../types'
+import { createMutationObserver } from '../utils/observer'
 
 export default async function bootstrapApp(app: Application) {
+    app.observer = createMutationObserver(app)
+
     try {
         // 加载 js css
         await parseHTMLandloadSources(app.pageEntry as string)

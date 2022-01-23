@@ -1,4 +1,6 @@
 /* eslint-disable array-callback-return */
+import { $ } from './utils'
+
 const reg = /^http(s)?:\/\//
 function isCorrectURL(url = '') {
     return reg.test(url)
@@ -7,8 +9,7 @@ function isCorrectURL(url = '') {
 // 匹配域名
 const hostReg = /(?<=:\/\/)[^/]*/
 function getHost(url: string) {
-    const result = url.match(hostReg)
-    return result ? result[0] : ''
+    return url.match(hostReg)?.[0] || ''
 }
 
 const hasLoadedURLs: string[] = []
@@ -68,10 +69,6 @@ export function loadSourceText(url: string) {
     })
 }
 
-function $(selector: string) {
-    return document.querySelector(selector)
-}
-
 const sourceReg = /\.css$/
 const head = $('head')!
 export function loadLink(url: string, attrs: NamedNodeMap) {
@@ -84,7 +81,7 @@ export function loadLink(url: string, attrs: NamedNodeMap) {
         source.onload = resolve as any
         source.onerror = reject
         head.appendChild(source)
-        // 如果不是 css 或者 js，马上 resolve
+        // 如果不是 css 或者 js(prefetch)，马上 resolve
         if (!sourceReg.test(url)) {
             setTimeout(resolve)
         }

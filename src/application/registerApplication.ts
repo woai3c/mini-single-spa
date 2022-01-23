@@ -8,5 +8,6 @@ export default function registerApplication(app: Application) {
     }
 
     app.status = AppStatus.BEFORE_BOOTSTRAP
+    app.loadedStyle = []
     apps.push(app)
 }

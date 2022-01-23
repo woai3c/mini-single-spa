@@ -17,6 +17,8 @@ export interface Application {
     name: string
     activeRule: Function | string
     customProps: Function | AnyObject
+    observer?: MutationObserver | null
+    loadedStyle?: HTMLStyleElement[]
     pageEntry?: string
     status?: AppStatus
     loadApp: () => Promise<any>
