@@ -81,7 +81,7 @@ interface Application {
     pageEntry?: string
 
     /**
-     * loadApp() 必须返回一个对象：
+     * loadApp() 必须返回一个 Promise，resolve() 后得到一个对象：
      * {
      *   bootstrap: () => Promise<any>
      *   mount: (props: AnyObject) => Promise<any>
