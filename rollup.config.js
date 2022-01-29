@@ -6,7 +6,6 @@ import typescript from 'rollup-plugin-typescript2'
 import replace from '@rollup/plugin-replace'
 import rollup from 'rollup'
 import { uglify } from 'rollup-plugin-uglify'
-import { babel } from '@rollup/plugin-babel'
 
 const resolveFile = function (filePath) {
     return path.join(__dirname, filePath)
@@ -32,25 +31,6 @@ function getOptions(mode) {
             replace({
                 preventAssignment: true,
                 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-            }),
-            babel({
-                extensions: ['.js', '.ts'],
-                babelHelpers: 'runtime',
-                plugins: ['@babel/plugin-transform-runtime'],
-                presets: [
-                    [
-                        '@babel/env',
-                        {
-                            targets: {
-                                browsers: [
-                                    '> 1%',
-                                    'last 2 versions',
-                                    'not ie <= 10',
-                                ],
-                            },
-                        },
-                    ],
-                ],
             }),
         ],
     }

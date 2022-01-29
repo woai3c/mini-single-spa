@@ -9,19 +9,18 @@ export enum AppStatus {
     MOUNTED = 'MOUNTED',
     BEFORE_UNMOUNT = 'BEFORE_UNMOUNT',
     UNMOUNTED = 'UNMOUNTED',
-    LOAD_ERROR = 'LOAD_ERROR',
-    SKIP_BECAUSE_BROKEN = 'SKIP_BECAUSE_BROKEN',
+    BOOTSTRAP_ERROR = 'BOOTSTRAP_ERROR',
+    MOUNT_ERROR = 'MOUNT_ERROR',
+    UNMOUNT_ERROR = 'UNMOUNT_ERROR',
 }
 
 export interface Application {
     name: string
     activeRule: Function | string
-    customProps: Function | AnyObject
-    observer?: MutationObserver | null
-    loadedStyle?: HTMLStyleElement[]
-    pageEntry?: string
-    status?: AppStatus
     loadApp: () => Promise<any>
+    props: AnyObject | Function
+    status?: AppStatus
+    container?: HTMLElement
     bootstrap?: (props: AnyObject) => Promise<any>
     mount?: (props: AnyObject) => Promise<any>
     unmount?: (props: AnyObject) => Promise<any>

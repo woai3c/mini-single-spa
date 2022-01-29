@@ -1,18 +1,7 @@
-import parseHTMLandloadSources from 'src/utils/parseHTMLandloadSources'
 import { isPromise } from 'src/utils/utils'
 import { AnyObject, Application, AppStatus } from '../types'
-import { createMutationObserver } from '../utils/observer'
 
-export default async function bootstrapApp(app: Application) {
-    app.observer = createMutationObserver(app)
-
-    try {
-        // 加载 js css
-        await parseHTMLandloadSources(app.pageEntry as string)
-    } catch (error) {
-        throw error
-    }
-    
+export default async function bootstrapApp(app: Application) {    
     const { bootstrap, mount, unmount } = await app.loadApp()
 
     validateLifeCycleFunc('bootstrap', bootstrap)
@@ -22,15 +11,26 @@ export default async function bootstrapApp(app: Application) {
     app.bootstrap = bootstrap
     app.mount = mount
     app.unmount = unmount
-    app.customProps = await getProps(app.customProps)
-    
-    let result = (app as any).bootstrap(app.customProps)
+
+    try {
+        app.props = await getProps(app.props)
+    } catch (err) {
+        app.status = AppStatus.BOOTSTRAP_ERROR
+        throw err
+    }
+
+    let result = (app as any).bootstrap(app.props)
     if (!isPromise(result)) {
         result = Promise.resolve(result)
     }
     
-    return result.then(() => {
+    return result
+    .then(() => {
         app.status = AppStatus.BOOTSTRAPPED
+    })
+    .catch((err: Error) => {
+        app.status = AppStatus.BOOTSTRAP_ERROR
+        throw err
     })
 }
 

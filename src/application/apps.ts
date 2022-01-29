@@ -6,13 +6,12 @@ import { Application, AppStatus } from '../types'
 export const apps: Application[] = []
 
 export async function loadApps() {
-    const toLoadApp = getAppsWithStatus(AppStatus.BEFORE_BOOTSTRAP)
     const toUnMountApp = getAppsWithStatus(AppStatus.MOUNTED)
+    await Promise.all(toUnMountApp.map(unMountApp))
     
-    const loadPromise = toLoadApp.map(bootstrapApp)
-    const unMountPromise = toUnMountApp.map(unMountApp)
-    await Promise.all([...loadPromise, ...unMountPromise])
-    
+    const toLoadApp = getAppsWithStatus(AppStatus.BEFORE_BOOTSTRAP)
+    await Promise.all(toLoadApp.map(bootstrapApp))
+
     const toMountApp = [
         ...getAppsWithStatus(AppStatus.BOOTSTRAPPED),
         ...getAppsWithStatus(AppStatus.UNMOUNTED),
