@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App'
-import { registerApplication, start } from './mini-single-spa.esm'
+import { registerApplication, start } from '@mini-single-spa/esm'
 import { $, pathPrefix } from './utils'
 
 function render() {
