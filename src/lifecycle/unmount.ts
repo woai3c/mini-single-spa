@@ -4,26 +4,17 @@ import { Application, AppStatus } from '../types'
 export default function unMountApp(app: Application): Promise<any> {
     app.status = AppStatus.BEFORE_UNMOUNT
 
-    let result = (app as any).unmount(app.customProps)
+    let result = (app as any).unmount({ props: app.props, container: app.container })
     if (!isPromise(result)) {
         result = Promise.resolve(result)
     }
     
-    return result.then(() => {
-        app.observer?.disconnect()
-        app.observer = null
-        removeStyles(app)
+    return result
+    .then(() => {
         app.status = AppStatus.UNMOUNTED
     })
-}
-
-function removeStyles(app: Application) {
-    const result: HTMLStyleElement[] = []
-    app.loadedStyle?.forEach(style => {
-        const clone = style.cloneNode(true)
-        result.push(clone as HTMLStyleElement)
-        style.parentNode?.removeChild(style)
+    .catch((err: Error) => {
+        app.status = AppStatus.UNMOUNT_ERROR
+        throw err
     })
-
-    app.loadedStyle = result
 }

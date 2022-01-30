@@ -1,19 +1,18 @@
 import parseHTMLandloadSources from 'src/utils/parseHTMLandloadSources'
 import { isPromise } from 'src/utils/utils'
 import { AnyObject, Application, AppStatus } from '../types'
-import { createMutationObserver } from '../utils/observer'
+
+declare const window: any
 
 export default async function bootstrapApp(app: Application) {
-    app.observer = createMutationObserver(app)
-
     try {
         // 加载 js css
-        await parseHTMLandloadSources(app.pageEntry as string)
+        await parseHTMLandloadSources(app.pageEntry)
     } catch (error) {
         throw error
     }
     
-    const { bootstrap, mount, unmount } = await app.loadApp()
+    const { bootstrap, mount, unmount } = await getLifeCycleFuncs(app.name)
 
     validateLifeCycleFunc('bootstrap', bootstrap)
     validateLifeCycleFunc('mount', mount)
@@ -22,15 +21,26 @@ export default async function bootstrapApp(app: Application) {
     app.bootstrap = bootstrap
     app.mount = mount
     app.unmount = unmount
-    app.customProps = await getProps(app.customProps)
     
-    let result = (app as any).bootstrap(app.customProps)
+    try {
+        app.props = await getProps(app.props)
+    } catch (err) {
+        app.status = AppStatus.BOOTSTRAP_ERROR
+        throw err
+    }
+    
+    let result = (app as any).bootstrap({ props: app.props, container: app.container })
     if (!isPromise(result)) {
         result = Promise.resolve(result)
     }
     
-    return result.then(() => {
+    return result
+    .then(() => {
         app.status = AppStatus.BOOTSTRAPPED
+    })
+    .catch((err: Error) => {
+        app.status = AppStatus.BOOTSTRAP_ERROR
+        throw err
     })
 }
 
@@ -44,4 +54,17 @@ function validateLifeCycleFunc(name: string, fn: any) {
     if (typeof fn !== 'function') {
         throw Error(`The "${name}" must be a function`)
     }
+}
+
+async function getLifeCycleFuncs(name: string) {
+    const result = window[`mini-single-spa-${name}`]
+    if (typeof result === 'function') {
+        return result()
+    }
+
+    if (typeof result === 'object') {
+        return result
+    }
+
+    throw Error(`The micro app must inject the lifecycle("bootstrap" "mount" "unmount") into window['mini-single-spa-${name}']`)
 }

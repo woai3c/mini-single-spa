@@ -1,9 +1,9 @@
 /* eslint-disable array-callback-return */
 import { $ } from './utils'
 
-const reg = /^http(s)?:\/\//
+const urlReg = /^http(s)?:\/\//
 function isCorrectURL(url = '') {
-    return reg.test(url)
+    return urlReg.test(url)
 }
 
 // 匹配域名
@@ -50,7 +50,7 @@ export default async function parseHTMLandloadSources(url: string) {
             return loadLink(href, link.attributes)
         }
     }).filter(Boolean)
-    
+
     // 异步加载 link script 标签，顺序执行 js
     return Promise.all([...linkPromises, syncLoadScripts(scripts as string[])])
 }

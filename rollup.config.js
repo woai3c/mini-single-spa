@@ -6,7 +6,7 @@ import typescript from 'rollup-plugin-typescript2'
 import replace from '@rollup/plugin-replace'
 import rollup from 'rollup'
 import { uglify } from 'rollup-plugin-uglify'
-import { babel } from '@rollup/plugin-babel'
+import fs from 'fs'
 
 const resolveFile = function (filePath) {
     return path.join(__dirname, filePath)
@@ -32,25 +32,6 @@ function getOptions(mode) {
             replace({
                 preventAssignment: true,
                 'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-            }),
-            babel({
-                extensions: ['.js', '.ts'],
-                babelHelpers: 'runtime',
-                plugins: ['@babel/plugin-transform-runtime'],
-                presets: [
-                    [
-                        '@babel/env',
-                        {
-                            targets: {
-                                browsers: [
-                                    '> 1%',
-                                    'last 2 versions',
-                                    'not ie <= 10',
-                                ],
-                            },
-                        },
-                    ],
-                ],
             }),
         ],
     }
@@ -81,9 +62,16 @@ if (process.env.NODE_ENV === 'development') {
                 break
             case 'END':
                 console.log('rebuild done.')
+                colpyHelper()
         }
     })
 }
 
 const modes = ['esm', 'cjs', 'iife']
 export default modes.map(mode => getOptions(mode))
+
+// 开发时，每次打包完成都将打包好的文件拷贝到 multiple-spa 示例中
+function colpyHelper() {
+    const content = fs.readFileSync(resolveFile('dist/mini-single-spa.esm.js'))
+    fs.writeFileSync(resolveFile('examples/multiple-spa/main/src/mini-single-spa.esm.js'), content)
+}

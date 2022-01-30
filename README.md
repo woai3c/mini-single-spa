@@ -3,7 +3,6 @@
 
 ## 功能
 * 支持不同框架的子应用
-* 样式作用域隔离
 
 ## Examples
 所有示例均在 examples 目录下。
@@ -26,26 +25,16 @@ import { registerApplication, start } from 'mini-single-spa'
 
 registerApplication({
     name: 'vue',
-    loadApp: async () => {
-        return window.__Vue_App__
-    },
     pageEntry: 'http://localhost:8001',
     activeRule: pathPrefix('/vue'),
-    customProps: {
-        container: $('#subapp-viewport')
-    }
+    container: $('#subapp-viewport')
 })
 
 registerApplication({
     name: 'react',
-    loadApp: async () => {
-        return window.__React_App__
-    },
     pageEntry: 'http://localhost:8002',
-    activeRule: pathPrefix('/react'),
-    customProps: {
-        container: $('#subapp-viewport')
-    }
+    activeRule:pathPrefix('/react'),
+    container: $('#subapp-viewport')
 })
 
 start()
@@ -53,11 +42,18 @@ start()
 首先使用 `registerApplication()` 注册所有的子应用，然后执行 `start()` 启动。
 
 ### 子应用
-子应用必须导出三个函数：
+子应用必须暴露三个函数，将它们挂在全局的子应用名称（前缀 `mini-single-spa-`）下：
 ```ts
 bootstrap: () => Promise<any>
 mount: (props: AnyObject) => Promise<any>
 unmount: (props: AnyObject) => Promise<any>
+
+// 假设你注册的子应用名称为 vue，
+window['mini-single-spa-vue'] = {
+    bootstrap,
+    mount,
+    unmount
+}
 ```
 `bootstrap()` 在子应用加载时只会启动一次，`mount()` 在子应用挂载时启用，`unmount()` 在子应用卸载时使用。
 
@@ -75,19 +71,12 @@ interface Application {
     activeRule: Function | string
 
     // 传给子应用的自定义参数
-    customProps: AnyObject
+    props: AnyObject
 
-    // 可选，子应用入口 url，例如 http://localhost:8001
-    pageEntry?: string
+    // 子应用要挂载的 dom
+    container: HTMLElement
 
-    /**
-     * loadApp() 必须返回一个 Promise，resolve() 后得到一个对象：
-     * {
-     *   bootstrap: () => Promise<any>
-     *   mount: (props: AnyObject) => Promise<any>
-     *   unmount: (props: AnyObject) => Promise<any>
-     * }
-     */
-    loadApp: () => Promise<any>
+    // 子应用入口 url，例如 http://localhost:8001
+    pageEntry: string
 }
 ```
