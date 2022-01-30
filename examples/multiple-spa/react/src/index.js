@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 
-function render(props = {}) {
-  const { container } = props;
+function render(options = {}) {
+  const { container } = options;
 
   function helper(container) {
       let div = container.querySelector('#root')
@@ -20,22 +20,28 @@ function render(props = {}) {
   ReactDOM.render(<App />, container ? helper(container) : document.querySelector('#root'));
 }
 
-if (!window.__IS_SINGLE_SPA__) {
-  render()
-}
-
 export async function bootstrap() {
   console.log('[react16] react app bootstraped');
 }
 
-export async function mount(props) {
-  console.log('[react16] props from main framework', props);
-  render(props);
+export async function mount(options) {
+  console.log('[react16] options from main framework', options);
+  render(options);
 }
 
-export async function unmount(props) {
-  const { container } = props;
+export async function unmount(options) {
+  const { container } = options;
   ReactDOM.unmountComponentAtNode(container ? container.querySelector('#root') : document.querySelector('#root'));
+}
+
+if (window.__IS_SINGLE_SPA__) {
+  window['mini-single-spa-react'] = {
+    bootstrap,
+    mount,
+    unmount
+  }
+} else {
+  render()
 }
 
 // If you want your app to work offline and load faster, you can change

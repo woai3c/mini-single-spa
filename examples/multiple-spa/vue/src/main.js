@@ -9,8 +9,8 @@ Vue.config.productionTip = false
 
 let router = null
 let app = null
-function render(props = {}) {
-    const { container } = props
+function render(options = {}) {
+    const { container } = options
     router = new VueRouter({
         base: window.__IS_SINGLE_SPA__ ? '/vue' : '/',
         mode: 'history',
@@ -35,17 +35,13 @@ function render(props = {}) {
     }
 }
 
-if (!window.__IS_SINGLE_SPA__) {
-    render()
-}
-
 export async function bootstrap() {
     console.log('[vue] vue app bootstraped')
 }
 
-export async function mount(props) {
-    console.log('[vue] props from main framework', props)
-    render(props)
+export async function mount(options) {
+    console.log('[vue] options from main framework', options)
+    render(options)
 }
 
 export async function unmount() {
@@ -53,4 +49,14 @@ export async function unmount() {
     app.$el.innerHTML = ''
     app = null
     router = null
+}
+
+if (window.__IS_SINGLE_SPA__) {
+    window['mini-single-spa-vue'] = {
+        bootstrap,
+        mount,
+        unmount
+    }
+} else {
+    render()
 }

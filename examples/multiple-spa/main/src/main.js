@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import App from './App'
-import { registerApplication, start } from 'mini-single-spa'
+import { registerApplication, start } from './mini-single-spa.esm'
 import { $, pathPrefix } from './utils'
 
 function render() {
@@ -16,26 +16,16 @@ render()
 
 registerApplication({
     name: 'vue',
-    loadApp: async () => {
-        return window.__Vue_App__
-    },
     pageEntry: 'http://localhost:8001',
     activeRule: pathPrefix('/vue'),
-    customProps: {
-        container: $('#subapp-viewport')
-    }
+    container: $('#subapp-viewport')
 })
 
 registerApplication({
     name: 'react',
-    loadApp: async () => {
-        return window.__React_App__
-    },
     pageEntry: 'http://localhost:8002',
     activeRule:pathPrefix('/react'),
-    customProps: {
-        container: $('#subapp-viewport')
-    }
+    container: $('#subapp-viewport')
 })
 
 start()

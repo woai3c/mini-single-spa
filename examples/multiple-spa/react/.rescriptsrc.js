@@ -1,8 +1,5 @@
 module.exports = {
   webpack: config => {
-    config.output.library = '__React_App__';
-    config.output.libraryTarget = 'window';
-    config.output.globalObject = 'window';
     config.output.publicPath = "//localhost:8002/";
 
     return config;
