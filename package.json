@@ -8,7 +8,16 @@
   "scripts": {
     "lint": "eslint --ext .js,.ts,.d.ts src/",
     "build": "rimraf dist && rollup -c rollup.config.js --environment NODE_ENV:production",
-    "dev": "rimraf dist && rollup -c rollup.config.js --environment NODE_ENV:development"
+    "dev": "rimraf dist && rollup -c rollup.config.js --environment NODE_ENV:development",
+    "install:local": "pnpm i",
+    "install:main": "cd examples/multiple-spa/main && pnpm i",
+    "install:react": "cd examples/multiple-spa/react && pnpm i",
+    "install:vue": "cd examples/multiple-spa/vue && pnpm i",
+    "install:all": "run-p install:main install:react install:vue install:local",
+    "dev:main": "cd examples/multiple-spa/main && pnpm dev",
+    "dev:react": "cd examples/multiple-spa/react && pnpm dev",
+    "dev:vue": "cd examples/multiple-spa/vue && pnpm dev",
+    "dev:all": "run-p dev:main dev:react dev:vue dev"
   },
   "repository": {
     "type": "git",
@@ -45,6 +54,7 @@
     "eslint-plugin-import": "^2.22.0",
     "husky": "^4.3.0",
     "lint-staged": "^10.5.4",
+    "npm-run-all": "^4.1.5",
     "rimraf": "^3.0.2",
     "rollup": "^2.64.0",
     "rollup-plugin-typescript2": "^0.31.1",

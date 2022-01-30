@@ -7,11 +7,18 @@
 
 ## Examples
 所有示例均在 examples 目录下。
-#### simple example
-构建后，使用 vscode live server 插件（或别的本地服务器）打开 simple.html，也可以[在线预览](https://jsrun.net/e59Kp/edit)。
 
-#### multiple-spa example
-分别在 multiple-spa 示例的三个子目录 main（主应用）、react（子应用）、vue（子应用）下执行 `pnpm dev` 或 `npm run dev`，然后打开 `http://localhost:8000` 即可查看多个 spa 子应用的示例。
+### multiple-spa example
+#### 运行 demo
+安装
+```
+pnpm install:all
+```
+运行开发环境
+```
+pnpm dev:all
+```
+访问 `http://localhost:8000`，即可查看多个 spa 子应用的示例。
 
 ## 使用
 ### 安装
