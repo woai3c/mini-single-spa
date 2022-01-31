@@ -62,16 +62,9 @@ if (process.env.NODE_ENV === 'development') {
                 break
             case 'END':
                 console.log('rebuild done.')
-                colpyHelper()
         }
     })
 }
 
 const modes = ['esm', 'cjs', 'iife']
 export default modes.map(mode => getOptions(mode))
-
-// 开发时，每次打包完成都将打包好的文件拷贝到 multiple-spa 示例中
-function colpyHelper() {
-    const content = fs.readFileSync(resolveFile('dist/mini-single-spa.esm.js'))
-    fs.writeFileSync(resolveFile('examples/multiple-spa/main/src/mini-single-spa.esm.js'), content)
-}
