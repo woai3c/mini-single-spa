@@ -6,7 +6,6 @@ import typescript from 'rollup-plugin-typescript2'
 import replace from '@rollup/plugin-replace'
 import rollup from 'rollup'
 import { uglify } from 'rollup-plugin-uglify'
-import fs from 'fs'
 
 const resolveFile = function (filePath) {
     return path.join(__dirname, filePath)
