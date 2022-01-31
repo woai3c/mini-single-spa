@@ -7,6 +7,9 @@
 ## Examples
 所有示例均在 examples 目录下。
 ### simple example
+```
+pnpm dev
+```
 构建后，使用 vscode live server 插件（或别的本地服务器）打开 simple.html，也可以[在线预览](https://jsrun.net/e59Kp/edit)。
 
 ## 使用
