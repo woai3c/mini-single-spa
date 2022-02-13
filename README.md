@@ -4,6 +4,7 @@
 ## 功能
 * 支持不同框架的子应用
 * 支持子应用 HTML 入口
+* js 沙箱，隔离子应用 window 作用域
 
 ## Examples
 所有示例均在 examples 目录下。
@@ -48,20 +49,19 @@ start()
 首先使用 `registerApplication()` 注册所有的子应用，然后执行 `start()` 启动。
 
 ### 子应用
-子应用必须暴露三个函数，将它们挂在全局的子应用名称（前缀 `mini-single-spa-`）下：
+子应用必须暴露三个函数，将它们挂在全局的子应用名称 `window.__MICRO_APP__` 下：
 ```ts
 bootstrap: () => Promise<any>
 mount: (props: AnyObject) => Promise<any>
 unmount: (props: AnyObject) => Promise<any>
 
-// 假设你注册的子应用名称为 vue，
-window['mini-single-spa-vue'] = {
+window.__MICRO_APP__= {
     bootstrap,
     mount,
     unmount
 }
 ```
-`bootstrap()` 在子应用加载时只会启动一次，`mount()` 在子应用挂载时启用，`unmount()` 在子应用卸载时使用。
+`bootstrap()` 在子应用加载时只会启动一次，`mount()` 在子应用每次挂载时启用，`unmount()` 在子应用每次卸载时使用。
 
 ### registerApplication(Application)
 `registerApplication(Application)` 接收的参数如下：
