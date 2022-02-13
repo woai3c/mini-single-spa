@@ -14,5 +14,5 @@
         "declaration": true,
         "declarationDir": "dist"
     },
-    "include": ["src/**/*.ts", "src/**/*.d.ts"]
+    "include": ["src"]
 }

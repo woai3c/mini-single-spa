@@ -1,4 +1,4 @@
-import overwriteEventsAndHistory from './navigation/overwriteEventsAndHistory'
+import overwriteEventsAndHistory from './utils/overwriteEventsAndHistory'
 export { default as registerApplication } from './application/registerApplication'
 export { default as start } from './start'
 

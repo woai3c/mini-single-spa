@@ -1,7 +1,14 @@
+import Sandbox from './sandbox/Sandbox'
+
 export interface AnyObject {
     [key: string]: any
 }
 
+export type MicroWindow = Window & any
+
+/**
+ * app 的状态集合
+ */
 export enum AppStatus {
     BEFORE_BOOTSTRAP = 'BEFORE_BOOTSTRAP',
     BOOTSTRAPPED = 'BOOTSTRAPPED',
@@ -14,14 +21,87 @@ export enum AppStatus {
     UNMOUNT_ERROR = 'UNMOUNT_ERROR',
 }
 
+/**
+ * script css 的资源属性
+ */
+export interface Source {
+    /**
+     * 是否全局资源
+     */
+    isGlobal: boolean
+    /**
+     * 资源的 url
+     */
+    url?: string
+    /**
+     * 资源的内容，如果 url 有值，则忽略该属性
+     */
+    value: string
+    /**
+     * script 的类型
+     */
+    type?: string | null
+}
+
 export interface Application {
+    /**
+     * app 名称
+     */
     name: string
+    /**
+     * app 匹配规则，值为 true 时加载 app
+     */
     activeRule: Function | string
+    /**
+     * 父应用传过来的自定义属性
+     */
     props: Function | AnyObject
+    /**
+     * app 挂载的 dom
+     */
     container: HTMLElement
+    /**
+     * app 访问入口，一个 URL 链接
+     */
     pageEntry: string
+    /**
+     * app 入口页面的 html 内容（body 部分）
+     */
+    pageBody: string
+    /**
+     * app 的 js 运行沙箱
+     */
+    sandbox: Sandbox
+    /**
+     * app 当前状态
+     */
     status?: AppStatus
+    /**
+     * app 已经加载过的 url，用于去重
+     */
+    loadedURLs: string[]
+    /**
+     * app 所有的非全局 style，当 app 加载时需要添加到页面中
+     */
+    styles: string[] | HTMLStyleElement[]
+    /**
+     * app 页面入口上的非全局 script，只会执行一次
+     */
+    scripts: string[]
+    /**
+     * 是否首次加载
+     */
+    isFirstLoad: boolean
+    /**
+     * app 第一次加载时触发
+     */
     bootstrap?: (options: AnyObject) => Promise<any>
+    /**
+     * app 加载方法
+     */
     mount?: (options: AnyObject) => Promise<any>
+    /**
+     * app 卸载方法
+     */
     unmount?: (options: AnyObject) => Promise<any>
 }

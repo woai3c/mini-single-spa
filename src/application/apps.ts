@@ -1,9 +1,8 @@
+import { appMaps, isActive } from '../utils/application'
 import bootstrapApp from '../lifecycle/bootstrap'
 import mountApp from '../lifecycle/mount'
 import unMountApp from '../lifecycle/unmount'
 import { Application, AppStatus } from '../types'
-
-export const apps: Application[] = []
 
 export async function loadApps() {
     const toLoadApp = getAppsWithStatus(AppStatus.BEFORE_BOOTSTRAP)
@@ -23,8 +22,8 @@ export async function loadApps() {
 
 function getAppsWithStatus(status: AppStatus) {
     const result: Application[] = []
-    apps.forEach(app => {
-        // tobootstrap or tomount
+    appMaps.forEach(app => {
+        // 如果 app 路由规则匹配 to bootstrap or to mount
         if (isActive(app) && app.status === status) {
             switch (app.status) {
                 case AppStatus.BEFORE_BOOTSTRAP:
@@ -34,14 +33,10 @@ function getAppsWithStatus(status: AppStatus) {
                     break
             }
         } else if (app.status === AppStatus.MOUNTED && status === AppStatus.MOUNTED) {
-            // tounmount
+            // 如果路由规则不匹配 to unmount
             result.push(app)
         }
     })
 
     return result
-}
-
-function isActive(app: Application) {
-    return typeof app.activeRule === 'function' && app.activeRule(window.location)
 }

@@ -1,13 +1,17 @@
 module.exports = {
-    parserOptions: {
-        ecmaVersion: 2020,
-    },
     env: {
         es6: true,
         browser: true,
     },
     parser: '@typescript-eslint/parser',
-    extends: 'airbnb-base',
+    parserOptions: {
+        ecmaVersion: 2020,
+    },
+    extends: [
+        'airbnb-base',
+        // 需要使用该插件（或其他的 ts 插件），否则某些 lib.dom.d.ts 的 interface 为认为是 not defined
+        'plugin:@typescript-eslint/recommended',
+    ],
     plugins: [
         '@typescript-eslint',
     ],
@@ -63,5 +67,11 @@ module.exports = {
         'no-path-concat': 'off',
         'no-useless-catch': 'off',
         'no-restricted-syntax': 'off',
+        'lines-between-class-members': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+        '@typescript-eslint/ban-types': 'off',
+        'no-new-func': 'off',
+        'no-eval': 'off',
+        'guard-for-in': 'off',
     },
 }

@@ -1,18 +1,25 @@
-import parseHTMLandloadSources from 'src/utils/parseHTMLandloadSources'
-import { isPromise } from 'src/utils/utils'
+import Sandbox from '../sandbox/Sandbox'
+import { addStyles } from '../utils/dom'
+import { executeScripts, parseHTMLandLoadSources } from '../utils/source'
+import { isFunction, isObject } from '../utils/utils'
 import { AnyObject, Application, AppStatus } from '../types'
-
-declare const window: any
 
 export default async function bootstrapApp(app: Application) {
     try {
         // 加载 js css
-        await parseHTMLandloadSources(app.pageEntry)
+        await parseHTMLandLoadSources(app)
     } catch (error) {
+        app.status = AppStatus.BOOTSTRAP_ERROR
         throw error
     }
+
+    app.sandbox = new Sandbox(app)
+    app.sandbox.start()
+    app.container.innerHTML = app.pageBody
+    addStyles(app.styles)
+    executeScripts(app.scripts, app)
     
-    const { bootstrap, mount, unmount } = await getLifeCycleFuncs(app.name)
+    const { bootstrap, mount, unmount } = await getLifeCycleFuncs(app)
 
     validateLifeCycleFunc('bootstrap', bootstrap)
     validateLifeCycleFunc('mount', mount)
@@ -29,14 +36,15 @@ export default async function bootstrapApp(app: Application) {
         throw err
     }
     
-    let result = (app as any).bootstrap({ props: app.props, container: app.container })
-    if (!isPromise(result)) {
-        result = Promise.resolve(result)
-    }
-    
-    return result
+    const result = (app as any).bootstrap({ props: app.props, container: app.container })
+
+    return Promise.resolve(result)
     .then(() => {
         app.status = AppStatus.BOOTSTRAPPED
+        // 子应用首次加载的脚本执行完就不再需要了
+        app.scripts.length = 0
+        // 记录当前的 window 快照，重新挂载子应用时恢复
+        app.sandbox.recordWindowSnapshot()
     })
     .catch((err: Error) => {
         app.status = AppStatus.BOOTSTRAP_ERROR
@@ -44,27 +52,28 @@ export default async function bootstrapApp(app: Application) {
     })
 }
 
-async function getProps(props: Function | AnyObject) {
-    if (typeof props === 'function') return props()
-    if (typeof props === 'object') return props
+async function getProps(props: AnyObject | (() => AnyObject)) {
+    if (isFunction(props)) return (props as () => AnyObject)()
+    if (isObject(props)) return props
     return {}
 }
 
 function validateLifeCycleFunc(name: string, fn: any) {
-    if (typeof fn !== 'function') {
+    if (!isFunction(fn)) {
         throw Error(`The "${name}" must be a function`)
     }
 }
 
-async function getLifeCycleFuncs(name: string) {
-    const result = window[`mini-single-spa-${name}`]
-    if (typeof result === 'function') {
+async function getLifeCycleFuncs(app: Application) {
+    const result = app.sandbox.proxyWindow.__MICRO_APP__
+    if (isFunction(result)) {
         return result()
     }
 
-    if (typeof result === 'object') {
+    if (isObject(result)) {
         return result
     }
 
-    throw Error(`The micro app must inject the lifecycle("bootstrap" "mount" "unmount") into window['mini-single-spa-${name}']`)
+    // eslint-disable-next-line no-restricted-globals
+    throw Error('The micro app must inject the lifecycle("bootstrap" "mount" "unmount") into window.__MICRO_APP__')
 }
