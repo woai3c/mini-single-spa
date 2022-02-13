@@ -24,8 +24,10 @@ registerApplication({
 registerApplication({
     name: 'react',
     pageEntry: 'http://localhost:8002',
-    activeRule:pathPrefix('/react'),
+    activeRule: pathPrefix('/react'),
     container: $('#subapp-viewport')
 })
 
 start()
+window.name = 'parent'
+console.log(window.name)

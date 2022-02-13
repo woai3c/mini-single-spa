@@ -1,6 +1,7 @@
 <template>
   <div class="home">
     <img alt="Vue logo" :src="img">
+    <button @click="sayHi">hello</button>
     <HelloWorld msg="Welcome to Your Vue.js App"/>
   </div>
 </template>
@@ -17,6 +18,11 @@ export default {
   data() {
     return {
       img: require('../assets/logo.png')
+    }
+  },
+  methods: {
+    sayHi() {
+      alert('hello')
     }
   }
 }

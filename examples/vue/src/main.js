@@ -3,8 +3,11 @@ import VueRouter from 'vue-router'
 import App from './App.vue'
 import routes from './router'
 import store from './store'
+import ElementUI from 'element-ui';
+import 'element-ui/lib/theme-chalk/index.css';
 import '@/styles/reset.css'
 
+Vue.use(ElementUI);
 Vue.config.productionTip = false
 
 let router = null
@@ -21,18 +24,13 @@ function render(options = {}) {
         router,
         store,
         render: h => h(App),
-    }).$mount(container ? helper(container) : '#app')
+    }).$mount(container ? container.querySelector('#app') : '#app')
 
-    function helper(container) {
-        let div = container.querySelector('#app')
-        if (!div) {
-            div = document.createElement('div')
-            div.id = 'app'
-            container.appendChild(div)
-        }
-
-        return div
-    }
+    console.log(window.name)
+    setTimeout(() => {
+        window.name = 1
+        console.log(window.name)
+    }, 3000)
 }
 
 export async function bootstrap() {
@@ -52,11 +50,25 @@ export async function unmount() {
 }
 
 if (window.__IS_SINGLE_SPA__) {
-    window['mini-single-spa-vue'] = {
+    window.__MICRO_APP__= {
         bootstrap,
         mount,
         unmount
     }
+
+    window.addEventListener('click', () => {
+        console.log('window click: vue')
+    })
+
+    window.onclick = () => {
+        console.log('window onclick: vue')
+    }
+
+    setTimeout(() => {
+        console.log('setTimeout')
+    }, 3000)
 } else {
     render()
 }
+
+window.name = { a: 1 }

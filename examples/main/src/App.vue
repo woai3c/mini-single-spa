@@ -22,7 +22,9 @@
 export default {
     name: 'App',
     methods: {
-        push(subapp) { history.pushState(null, subapp, subapp) }
+        push(subapp) { 
+            history.pushState(null, subapp, subapp) 
+        },
     }
 }
 </script>
