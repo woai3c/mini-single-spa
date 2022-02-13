@@ -64,7 +64,7 @@ window.__MICRO_APP__= {
 `bootstrap()` 在子应用加载时只会启动一次，`mount()` 在子应用每次挂载时启用，`unmount()` 在子应用每次卸载时使用。
 
 ### 子应用跨域和资源路径
-子应用需要开启 cors 和指定生成的资源路径，假如你使用 webpack 进行开发，可以这样配置：
+子应用需要开启 cors 和指定生成的资源路径，假如你使用 `vue-cli` 进行开发，可以这样配置：
 ```js
 module.exports = {
     devServer: {
