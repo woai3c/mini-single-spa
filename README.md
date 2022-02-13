@@ -63,6 +63,20 @@ window.__MICRO_APP__= {
 ```
 `bootstrap()` 在子应用加载时只会启动一次，`mount()` 在子应用每次挂载时启用，`unmount()` 在子应用每次卸载时使用。
 
+### 子应用跨域和资源路径
+子应用需要开启 cors 和指定生成的资源路径，假如你使用 webpack 进行开发，可以这样配置：
+```js
+module.exports = {
+    devServer: {
+        port: 8001, // 设置子应用访问端口
+        headers: {
+            'Access-Control-Allow-Origin': '*' // 解决跨域问题
+        }
+    },
+    publicPath: "//localhost:8001/", // 资源路径前缀
+}
+```
+
 ### registerApplication(Application)
 `registerApplication(Application)` 接收的参数如下：
 ```ts
