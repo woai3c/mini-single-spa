@@ -73,5 +73,6 @@ module.exports = {
         'no-new-func': 'off',
         'no-eval': 'off',
         'guard-for-in': 'off',
+        '@typescript-eslint/ban-ts-comment': 'off',
     },
 }
