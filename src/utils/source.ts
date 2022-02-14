@@ -1,6 +1,7 @@
 import { Application, Source } from '../types'
 import { createElement, removeNode } from './dom'
 import { originalAppendChild } from './originalEnv'
+import { isFunction } from './utils'
 
 const urlReg = /^http(s)?:\/\//
 function isCorrectURL(url = '') {
@@ -195,6 +196,12 @@ function loadScripts(scripts: Source[]) {
 export function executeScripts(scripts: string[], app: Application) {
     try {
         scripts.forEach(code => {
+            // 如果子应用提供了 loader
+            if (isFunction(app.loader)) {
+                // @ts-ignore
+                code = app.loader(code)
+            }
+            
             // ts 使用 with 会报错，所以需要这样包一下
             // 将子应用的 js 代码全局 window 环境指向代理环境 proxyWindow
             const warpCode = `

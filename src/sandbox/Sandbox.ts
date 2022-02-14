@@ -58,10 +58,9 @@ export default class Sandbox {
         this.proxyWindow = this.createProxyWindow(app.name)
     }
 
-    isActive() {
-        return this.active
-    }
-
+    /**
+     * 开启沙箱 
+     */
     start() {
         if (this.active) return
 
@@ -73,6 +72,9 @@ export default class Sandbox {
         }
     }
 
+    /**
+     * 关闭沙箱
+     */
     stop() {
         if (!this.active) return
         this.active = false
@@ -133,7 +135,9 @@ export default class Sandbox {
         }
     }
 
-    // 记录子应用的 window 快照
+    /**
+     * 记录子应用快照
+     */
     recordWindowSnapshot() {
         const { windowSnapshot, microAppWindow } = this
         const recordAttrs = windowSnapshot.get('attrs')!
@@ -158,7 +162,9 @@ export default class Sandbox {
         })
     }
 
-    // 恢复快照
+    /**
+     * 恢复子应用快照
+     */
     restoreWindowSnapshot() {
         const { 
             windowSnapshot, 
@@ -198,7 +204,9 @@ export default class Sandbox {
         })
     }
 
-    // 劫持 window 属性
+    /**
+     * 劫持 window 属性
+     */
     hijackProperties() {
         const { 
             microAppWindow,
@@ -298,6 +306,9 @@ export default class Sandbox {
         })
     }
     
+    /**
+     * 创建 window 代理对象
+     */
     createProxyWindow(appName: string) {
         const descriptorMap = new Map<string | symbol, 'target' | 'originalWindow'>()
         return new Proxy(this.microAppWindow, {

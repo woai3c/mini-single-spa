@@ -75,7 +75,7 @@ export interface Application {
     /**
      * app 当前状态
      */
-    status?: AppStatus
+    status: AppStatus
     /**
      * app 已经加载过的 url，用于去重
      */
@@ -99,9 +99,37 @@ export interface Application {
     /**
      * app 加载方法
      */
-    mount?: (options: AnyObject) => Promise<any>
+    mount: (options: AnyObject) => Promise<any>
     /**
      * app 卸载方法
      */
-    unmount?: (options: AnyObject) => Promise<any>
+    unmount: (options: AnyObject) => Promise<any>
+    /**
+     * app 生命周期钩子，加载页面资源前触发，只会触发一次
+     */
+    beforeBootstrap?: () => void
+    /**
+     * app 生命周期钩子，页面入口的资源被加载并执行后触发，只会触发一次
+     */
+    bootstrapped?: () => void
+    /**
+     * app 生命周期钩子，挂载前触发
+     */
+    beforeMount?: () => void
+    /**
+     * app 生命周期钩子，挂载后触发
+     */
+    mounted?: () => void
+    /**
+     * app 生命周期钩子，卸载前触发
+     */
+    beforeUmount?: () => void
+    /**
+     * app 生命周期钩子，卸载后触发
+     */
+    unmounted?: () => void
+    /**
+     * js 代码的 loader，每次获取到 js 代码后会传给 loader() 并将返回值作为新的代码
+     */
+    loader?: (code: string) => string
 }

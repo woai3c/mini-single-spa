@@ -1,4 +1,4 @@
-import { Application } from '../types'
+import { Application, AppStatus } from '../types'
 import { isFunction, nextTick } from './utils'
 
 export const appMaps = new Map<string, Application>()
@@ -31,4 +31,12 @@ export function getApp(name: string) {
 // 当前子应用是否激活
 export function isActive(app: Application) {
     return isFunction(app.activeRule) && (app.activeRule as Function)(window.location)
+}
+
+export function triggerAppHook<K extends keyof Application>(app: Application, hook: K, status: AppStatus) {
+    app.status = status
+    if (isFunction(app[hook])) {
+        // @ts-ignore
+        app[hook]()
+    }
 }

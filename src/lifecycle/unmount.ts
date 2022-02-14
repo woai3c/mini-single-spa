@@ -1,15 +1,16 @@
 import { removeStyles } from '../utils/dom'
 import { Application, AppStatus } from '../types'
+import { triggerAppHook } from 'src/utils/application'
 
 export default function unMountApp(app: Application): Promise<any> {
-    app.status = AppStatus.BEFORE_UNMOUNT
+    triggerAppHook(app, 'beforeUmount', AppStatus.BEFORE_UNMOUNT)
     const result = (app as any).unmount({ props: app.props, container: app.container })
     
     return Promise.resolve(result)
     .then(() => {
         app.sandbox.stop()
         app.styles = removeStyles(app.name)
-        app.status = AppStatus.UNMOUNTED
+        triggerAppHook(app, 'unmounted', AppStatus.UNMOUNTED)
     })
     .catch((err: Error) => {
         app.status = AppStatus.UNMOUNT_ERROR

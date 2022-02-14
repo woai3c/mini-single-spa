@@ -3,8 +3,11 @@ import { addStyles } from '../utils/dom'
 import { executeScripts, parseHTMLandLoadSources } from '../utils/source'
 import { isFunction, isObject } from '../utils/utils'
 import { AnyObject, Application, AppStatus } from '../types'
+import { triggerAppHook } from 'src/utils/application'
 
 export default async function bootstrapApp(app: Application) {
+    triggerAppHook(app, 'beforeBootstrap', AppStatus.BEFORE_BOOTSTRAP)
+
     try {
         // 加载 js css
         await parseHTMLandLoadSources(app)
@@ -40,11 +43,12 @@ export default async function bootstrapApp(app: Application) {
 
     return Promise.resolve(result)
     .then(() => {
-        app.status = AppStatus.BOOTSTRAPPED
         // 子应用首次加载的脚本执行完就不再需要了
         app.scripts.length = 0
         // 记录当前的 window 快照，重新挂载子应用时恢复
         app.sandbox.recordWindowSnapshot()
+        
+        triggerAppHook(app, 'bootstrapped', AppStatus.BOOTSTRAPPED)
     })
     .catch((err: Error) => {
         app.status = AppStatus.BOOTSTRAP_ERROR

@@ -1,8 +1,9 @@
 import { addStyles } from '../utils/dom'
 import { Application, AppStatus } from '../types'
+import { triggerAppHook } from 'src/utils/application'
 
 export default function mountApp(app: Application): Promise<any> {
-    app.status = AppStatus.BEFORE_MOUNT
+    triggerAppHook(app, 'beforeMount', AppStatus.BEFORE_MOUNT)
 
     if (!app.isFirstLoad) {
         // 重新加载子应用时恢复快照
@@ -18,7 +19,7 @@ export default function mountApp(app: Application): Promise<any> {
 
     return Promise.resolve(result)
     .then(() => {
-        app.status = AppStatus.MOUNTED
+        triggerAppHook(app, 'mounted', AppStatus.MOUNTED)
     })
     .catch((err: Error) => {
         app.status = AppStatus.MOUNT_ERROR
