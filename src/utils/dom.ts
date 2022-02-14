@@ -1,47 +1,18 @@
 import { AnyObject } from '../types'
+import { originalWindow } from './originalEnv'
 
-// 常用的一些事件集合
-export const onEventTypes = [
-    'click',
-    'scroll',
-    'error',
-    'load',
-    'unload',
-    'abort',
-    'keydown',
-    'keyup',
-    'keypress',
-    'message',
-    'mousedown',
-    'mouseup',
-    'mousemove',
-    'mouseenter',
-    'mouseout',
-    'mouseover',
-    'mouseleave',
-    'mousewheel',
-    'online',
-    'offline',
-    'reset',
-    'resize',
-    'storage',
-    'submit',
-    'pagehide',
-    'pageshow',
-    'hashchange',
-    'popstate',
-    'pointercancel',
-    'pointerdown',
-    'pointerenter',
-    'pointerleave',
-    'pointermove',
-    'pointerout',
-    'pointerover',
-    'pointerrawupdate',
-    'pointerup',
-    'popstate',
-    'progress',
-]
+let onEventTypes: string[] = []
+export function getEventTypes() {
+    if (onEventTypes.length) return onEventTypes
+
+    for (const key of Object.keys(originalWindow)) {
+        if (typeof key === 'string' && key.startsWith('on')) {
+            onEventTypes.push(key.slice(2))
+        }
+    }
+
+    return onEventTypes
+}
 
 export function createElement(tag: string, attrs?: AnyObject) {
     const node = document.createElement(tag)

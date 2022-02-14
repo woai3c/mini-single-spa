@@ -1,16 +1,13 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import { getCurrentAppName } from '../utils/application'
 import { originalDocument, originalDocumentAddEventListener, originalDocumentRemoveEventListener } from '../utils/originalEnv'
+import { isBoundFunction } from './Sandbox'
 
 type eventMap = Map<string, { listener: any, options: any }[]>
-type onEventMap = Map<string, EventListenerOrEventListenerObject>
 
 // 所有子应用绑定到 document 上的事件
 export const documentEventMap = new Map<string, eventMap>()
-// 所有子应用 document onxxx 事件集合
-export const onDocumentEventMap = new Map<string, onEventMap>()
 
-documentEventMap.set('global', new Map())
 export function patchDocumentEvents() {
     originalDocument.addEventListener = function addEventListener(
         type: string, 
@@ -18,21 +15,22 @@ export function patchDocumentEvents() {
         options?: boolean | AddEventListenerOptions | undefined,
     ) {
         const appName = getCurrentAppName()
-        let curMap: eventMap = new Map()
-        if (appName) {
-            if (!documentEventMap.get(appName)) {
+        // react 16 会在第一次 mount() 时绑定 "bound dispatchDiscreteEvent()" 事件到 document 上，后续 mount() 不会重新绑定
+        // 所以无需记录这种事件，也不需要移除，以免程序运行不正常
+        if (appName && !isBoundFunction(listener as Function)) {
+            let curMap = documentEventMap.get(appName)
+            if (!curMap) {
                 curMap = new Map()
                 documentEventMap.set(appName, curMap)
             }
-        } else {
-            curMap = documentEventMap.get('global')!
-        }
 
-        if (!curMap.get(type)) {
-            curMap.set(type, [])
-        }
+            if (!curMap.get(type)) {
+                curMap.set(type, [])
+            }
     
-        curMap.get(type)?.push({ listener, options })
+            curMap.get(type)?.push({ listener, options })
+        }
+        
         return originalDocumentAddEventListener.call(originalDocument, type, listener, options)
     }
     
@@ -42,20 +40,14 @@ export function patchDocumentEvents() {
         options?: boolean | AddEventListenerOptions | undefined,
     ) {
         const appName = getCurrentAppName()
-        let curMap: eventMap = new Map()
-        if (appName) {
-            curMap = documentEventMap.get(appName)!
-        } else {
-            curMap = documentEventMap.get('global')!
-        }
-
-        if (!curMap) return
-
-        const arr = curMap.get(type) || []
-        for (let i = 0, len = arr.length; i < len; i++) {
-            if (arr[i].listener === listener) {
-                arr.splice(i, 1)
-                break
+        if (appName && !isBoundFunction(listener as Function)) {
+            const curMap = documentEventMap.get(appName)
+            const arr = curMap?.get(type) || []
+            for (let i = 0, len = arr.length; i < len; i++) {
+                if (arr[i].listener === listener) {
+                    arr.splice(i, 1)
+                    break
+                }
             }
         }
     
@@ -64,7 +56,9 @@ export function patchDocumentEvents() {
 }
 
 export function releaseAppDocumentEvents(appName: string) {
-    const curMap = documentEventMap.get(appName)!
+    const curMap = documentEventMap.get(appName)
+    if (!curMap) return
+    
     for (const [type, arr] of curMap) {
         for (const item of arr) {
             originalDocumentRemoveEventListener.call(originalDocument, type as string, item.listener, item.options)

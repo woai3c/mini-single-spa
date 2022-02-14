@@ -6,7 +6,7 @@ import { temporarySetCurrentAppName } from '../utils/application'
 import { isFunction } from '../utils/utils'
 import { patchDocument, releaseDocument } from './patchDocument'
 import { documentEventMap, patchDocumentEvents, releaseAppDocumentEvents, releaseDocumentEvents } from './patchDocumentEvents'
-import { onEventTypes } from 'src/utils/dom'
+import { getEventTypes } from 'src/utils/dom'
 import { 
     originalWindowAddEventListener,
     originalWindowRemoveEventListener,
@@ -47,6 +47,7 @@ export default class Sandbox {
     private onWindowEventMap = new Map<string, EventListenerOrEventListenerObject>()
 
     constructor(app: Application) {
+        // 代理了 window、document 的 addEventListener 和 window.onxxx 事件
         this.windowSnapshot.set('attrs', new Map<string | symbol, any>())
         this.windowSnapshot.set('windowEvents', new Map<string | symbol, any>())
         this.windowSnapshot.set('onWindowEvents', new Map<string | symbol, any>())
@@ -55,7 +56,6 @@ export default class Sandbox {
         this.appName = app.name
         this.hijackProperties()
         this.proxyWindow = this.createProxyWindow(app.name)
-        this.proxyWindow.window = this.proxyWindow
     }
 
     isActive() {
@@ -69,7 +69,7 @@ export default class Sandbox {
         // 如果当前子应用为第一个
         if (++Sandbox.activeCount === 1) {
             patchDocument()
-            // patchDocumentEvents()
+            patchDocumentEvents()
         }
     }
 
@@ -109,11 +109,12 @@ export default class Sandbox {
             }
         }
 
-        onEventTypes.forEach(eventType => {
-            originalWindowRemoveEventListener.call(
+        getEventTypes().forEach(eventType => {
+            const fn = onWindowEventMap.get(eventType) as EventListenerOrEventListenerObject
+            fn && originalWindowRemoveEventListener.call(
                 originalWindow, 
                 eventType, 
-                onWindowEventMap.get(eventType) as EventListenerOrEventListenerObject,
+                fn,
             )
         })
 
@@ -123,12 +124,12 @@ export default class Sandbox {
         injectKeySet.clear()
         windowEventMap.clear()
         onWindowEventMap.clear()
-        // releaseAppDocumentEvents(this.appName)
+        releaseAppDocumentEvents(this.appName)
 
         // 如果所有的子应用都已卸载
         if (--Sandbox.activeCount === 0) {
             releaseDocument()
-            // releaseDocumentEvents()
+            releaseDocumentEvents()
         }
     }
 
@@ -138,7 +139,7 @@ export default class Sandbox {
         const recordAttrs = windowSnapshot.get('attrs')!
         const recordWindowEvents = windowSnapshot.get('windowEvents')!
         const recordOnWindowEvents = windowSnapshot.get('onWindowEvents')!
-        // const recordDocumentEvents = windowSnapshot.get('documentEvents')!
+        const recordDocumentEvents = windowSnapshot.get('documentEvents')!
         
         this.injectKeySet.forEach(key => {
             recordAttrs.set(key, deepCopy(microAppWindow[key]))
@@ -152,9 +153,9 @@ export default class Sandbox {
             recordOnWindowEvents.set(type, func)
         })
         
-        // documentEventMap.get(this.appName)?.forEach((arr: any[], type: string) => {
-        //     recordDocumentEvents.set(type, deepCopy(arr))
-        // })
+        documentEventMap.get(this.appName)?.forEach((arr: any[], type: string) => {
+            recordDocumentEvents.set(type, deepCopy(arr))
+        })
     }
 
     // 恢复快照
@@ -169,7 +170,7 @@ export default class Sandbox {
         const recordAttrs = windowSnapshot.get('attrs')!
         const recordWindowEvents = windowSnapshot.get('windowEvents')!
         const recordOnWindowEvents = windowSnapshot.get('onWindowEvents')!
-        // const recordDocumentEvents = windowSnapshot.get('documentEvents')!
+        const recordDocumentEvents = windowSnapshot.get('documentEvents')!
         
         recordAttrs.forEach((value, key) => {
             injectKeySet.add(key)
@@ -188,13 +189,13 @@ export default class Sandbox {
             originalWindowAddEventListener.call(originalWindow, type as string, func)
         })
 
-        // const curMap = documentEventMap.get(this.appName)!
-        // recordDocumentEvents.forEach((arr, type) => {
-        //     curMap.set(type as string, deepCopy(arr))
-        //     for (const item of arr) {
-        //         originalDocumentAddEventListener.call(originalDocument, type as string, item.listener, item.options)
-        //     }
-        // })
+        const curMap = documentEventMap.get(this.appName)!
+        recordDocumentEvents.forEach((arr, type) => {
+            curMap.set(type as string, deepCopy(arr))
+            for (const item of arr) {
+                originalDocumentAddEventListener.call(originalDocument, type as string, item.listener, item.options)
+            }
+        })
     }
 
     // 劫持 window 属性
@@ -278,9 +279,11 @@ export default class Sandbox {
 
         microAppWindow.eval = originalEval
         microAppWindow.document = originalDocument
+        microAppWindow.originalWindow = originalWindow
+        microAppWindow.window = microAppWindow
 
         // 劫持 window.onxxx 事件
-        onEventTypes.forEach(eventType => {
+        getEventTypes().forEach(eventType => {
             originalDefineProperty(microAppWindow, `on${eventType}`, {
                 configurable: true,
                 enumerable: true,
@@ -378,11 +381,15 @@ export default class Sandbox {
 export function needToBindOriginalWindow(fn: Function) {
     if (
         fn.toString().startsWith('class')
-        || fn.name.startsWith('bound ')
+        || isBoundFunction(fn)
         || (/^[A-Z][\w_]+$/.test(fn.name) && fn.prototype?.constructor === fn)
     ) {
         return false
     }
 
     return true
+}
+
+export function isBoundFunction(fn: Function) {
+    return fn?.name?.startsWith('bound ')
 }

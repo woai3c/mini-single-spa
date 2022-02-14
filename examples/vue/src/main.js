@@ -27,10 +27,6 @@ function render(options = {}) {
     }).$mount(container ? container.querySelector('#app') : '#app')
 
     console.log(window.name)
-    setTimeout(() => {
-        window.name = 1
-        console.log(window.name)
-    }, 3000)
 }
 
 export async function bootstrap() {
@@ -64,6 +60,14 @@ if (window.__IS_SINGLE_SPA__) {
         console.log('window onclick: vue')
     }
 
+    document.addEventListener('click', () => {
+        console.log('document click: vue')
+    })
+
+    document.onclick = () => {
+        console.log('document onclick: vue')
+    }
+
     setTimeout(() => {
         console.log('setTimeout')
     }, 3000)
@@ -71,4 +75,4 @@ if (window.__IS_SINGLE_SPA__) {
     render()
 }
 
-window.name = { a: 1 }
+window.name = 'vue'
