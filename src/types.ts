@@ -50,6 +50,8 @@ export interface Application {
     name: string
     /**
      * app 匹配规则，值为 true 时加载 app
+     * 例如传入 /vue，当 url 的路径变为 /vue 时，激活当前子应用。
+     * 如果 activeRule 为函数，则会传入 location 作为参数，activeRule(location) 返回 true 时，激活当前子应用。
      */
     activeRule: Function | string
     /**
