@@ -81,22 +81,55 @@ module.exports = {
 `registerApplication(Application)` 接收的参数如下：
 ```ts
 interface Application {
-    // 子应用名称
-    name: string
-
     /**
-     * 激活规则，例如传入 /vue，当 url 的路径变为 /vue 时，激活当前子应用。
+     * app 名称
+     */
+    name: string
+    /**
+     * app 匹配规则，值为 true 时加载 app
+     * 例如传入 /vue，当 url 的路径变为 /vue 时，激活当前子应用。
      * 如果 activeRule 为函数，则会传入 location 作为参数，activeRule(location) 返回 true 时，激活当前子应用。
      */
     activeRule: Function | string
-
-    // 传给子应用的自定义参数
-    props: AnyObject
-
-    // 子应用要挂载的 dom
+    /**
+     * 父应用传过来的自定义属性
+     */
+    props: Function | AnyObject
+    /**
+     * app 挂载的 dom
+     */
     container: HTMLElement
-
-    // 子应用入口 url，例如 http://localhost:8001
+    /**
+     * app 访问入口，一个 URL 链接
+     */
     pageEntry: string
+    /**
+     * app 生命周期钩子，加载页面资源前触发，只会触发一次
+     */
+    beforeBootstrap?: () => void
+    /**
+     * app 生命周期钩子，页面入口的资源被加载并执行后触发，只会触发一次
+     */
+    bootstrapped?: () => void
+    /**
+     * app 生命周期钩子，挂载前触发
+     */
+    beforeMount?: () => void
+    /**
+     * app 生命周期钩子，挂载后触发
+     */
+    mounted?: () => void
+    /**
+     * app 生命周期钩子，卸载前触发
+     */
+    beforeUmount?: () => void
+    /**
+     * app 生命周期钩子，卸载后触发
+     */
+    unmounted?: () => void
+    /**
+     * js 代码的 loader，每次获取到 js 代码后会传给 loader() 并将返回值作为新的代码
+     */
+    loader?: (code: string) => string
 }
 ```
