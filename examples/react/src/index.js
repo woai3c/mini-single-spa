@@ -9,9 +9,6 @@ function render(options = {}) {
   ReactDOM.render(<App />, container ? container.querySelector('#root') : document.querySelector('#root'));
 }
 
-export async function bootstrap() {
-  console.log('[react16] react app bootstraped');
-}
 
 export async function mount(options) {
   console.log('[react16] options from main framework', options);
@@ -25,7 +22,6 @@ export async function unmount(options) {
 
 if (window.__IS_SINGLE_SPA__) {
   window.__MICRO_APP__ = {
-    bootstrap,
     mount,
     unmount
   }

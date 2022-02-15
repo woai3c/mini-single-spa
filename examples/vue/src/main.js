@@ -29,9 +29,6 @@ function render(options = {}) {
     console.log(window.name)
 }
 
-export async function bootstrap() {
-    console.log('[vue] vue app bootstraped')
-}
 
 export async function mount(options) {
     console.log('[vue] options from main framework', options)
@@ -47,7 +44,6 @@ export async function unmount() {
 
 if (window.__IS_SINGLE_SPA__) {
     window.__MICRO_APP__= {
-        bootstrap,
         mount,
         unmount
     }

@@ -95,10 +95,6 @@ export interface Application {
      */
     isFirstLoad: boolean
     /**
-     * app 第一次加载时触发
-     */
-    bootstrap?: (options: AnyObject) => Promise<any>
-    /**
      * app 加载方法
      */
     mount: (options: AnyObject) => Promise<any>

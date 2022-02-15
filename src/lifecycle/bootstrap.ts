@@ -22,13 +22,11 @@ export default async function bootstrapApp(app: Application) {
     addStyles(app.styles)
     executeScripts(app.scripts, app)
     
-    const { bootstrap, mount, unmount } = await getLifeCycleFuncs(app)
+    const { mount, unmount } = await getLifeCycleFuncs(app)
 
-    validateLifeCycleFunc('bootstrap', bootstrap)
     validateLifeCycleFunc('mount', mount)
     validateLifeCycleFunc('unmount', unmount)
 
-    app.bootstrap = bootstrap
     app.mount = mount
     app.unmount = unmount
     
@@ -39,21 +37,12 @@ export default async function bootstrapApp(app: Application) {
         throw err
     }
     
-    const result = (app as any).bootstrap({ props: app.props, container: app.container })
-
-    return Promise.resolve(result)
-    .then(() => {
-        // 子应用首次加载的脚本执行完就不再需要了
-        app.scripts.length = 0
-        // 记录当前的 window 快照，重新挂载子应用时恢复
-        app.sandbox.recordWindowSnapshot()
-        
-        triggerAppHook(app, 'bootstrapped', AppStatus.BOOTSTRAPPED)
-    })
-    .catch((err: Error) => {
-        app.status = AppStatus.BOOTSTRAP_ERROR
-        throw err
-    })
+    // 子应用首次加载的脚本执行完就不再需要了
+    app.scripts.length = 0
+    // 记录当前的 window 快照，重新挂载子应用时恢复
+    app.sandbox.recordWindowSnapshot()
+    
+    triggerAppHook(app, 'bootstrapped', AppStatus.BOOTSTRAPPED)
 }
 
 async function getProps(props: AnyObject | (() => AnyObject)) {
