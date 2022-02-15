@@ -49,19 +49,17 @@ start()
 首先使用 `registerApplication()` 注册所有的子应用，然后执行 `start()` 启动。
 
 ### 子应用
-子应用必须暴露三个函数，将它们挂在全局的子应用名称 `window.__MICRO_APP__` 下：
+子应用必须向外暴击两个函数，将它们挂在全局的子应用名称 `window.__MICRO_APP__` 下：
 ```ts
-bootstrap: () => Promise<any>
 mount: (props: AnyObject) => Promise<any>
 unmount: (props: AnyObject) => Promise<any>
 
 window.__MICRO_APP__= {
-    bootstrap,
     mount,
     unmount
 }
 ```
-`bootstrap()` 在子应用加载时只会启动一次，`mount()` 在子应用每次挂载时启用，`unmount()` 在子应用每次卸载时使用。
+`mount()` 在子应用每次挂载时启用，`unmount()` 在子应用每次卸载时使用。
 
 ### 子应用跨域和资源路径
 子应用需要开启 cors 和指定生成的资源路径，假如你使用 `vue-cli` 进行开发，可以这样配置：
