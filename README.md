@@ -49,7 +49,7 @@ start()
 首先使用 `registerApplication()` 注册所有的子应用，然后执行 `start()` 启动。
 
 ### 子应用
-子应用必须向外暴露 `mount（）` 和 `unmount（）` 两个函数，并将它们挂在全局的子应用名称 `window.__MICRO_APP__` 下：
+子应用必须向外暴露 `mount()` 和 `unmount()` 两个函数，并将它们挂在全局的子应用名称 `window.__MICRO_APP__` 下：
 ```ts
 mount: (props: AnyObject) => Promise<any>
 unmount: (props: AnyObject) => Promise<any>
