@@ -14,11 +14,11 @@ import {
 } from '../utils/originalEnv'
 
 export function patchDocument() {
-    Document.prototype.appendChild = function appendChild<T extends Node>(node: T): any {
+    Element.prototype.appendChild = function appendChild<T extends Node>(node: T): any {
         return patchAddChild(this, node, null, 'append')
     }
     
-    Document.prototype.insertBefore = function insertBefore<T extends Node>(newNode: T, referenceNode: Node | null): any {
+    Element.prototype.insertBefore = function insertBefore<T extends Node>(newNode: T, referenceNode: Node | null): any {
         return patchAddChild(this, newNode, referenceNode, 'insert')
     }
 

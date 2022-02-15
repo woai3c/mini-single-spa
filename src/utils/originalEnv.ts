@@ -11,8 +11,8 @@ export const originalDocumentRemoveEventListener = document.removeEventListener
 export const originalEval = eval
 export const originalDefineProperty = Object.defineProperty
 
-export const originalAppendChild = Document.prototype.appendChild
-export const originalInsertBefore = Document.prototype.insertBefore
+export const originalAppendChild = Element.prototype.appendChild
+export const originalInsertBefore = Element.prototype.insertBefore
 export const originalCreateElement = Document.prototype.createElement
 export const originalQuerySelector = Document.prototype.querySelector
 export const originalQuerySelectorAll = Document.prototype.querySelectorAll
