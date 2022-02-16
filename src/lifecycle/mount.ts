@@ -1,6 +1,6 @@
 import { addStyles } from '../utils/dom'
 import { Application, AppStatus } from '../types'
-import { triggerAppHook } from 'src/utils/application'
+import { triggerAppHook } from '../utils/application'
 
 export default function mountApp(app: Application): Promise<any> {
     triggerAppHook(app, 'beforeMount', AppStatus.BEFORE_MOUNT)

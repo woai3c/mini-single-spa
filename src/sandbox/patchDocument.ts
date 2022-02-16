@@ -1,4 +1,4 @@
-import { isUniqueElement } from 'src/utils/dom'
+import { isUniqueElement } from '../utils/dom'
 import { getApp, getCurrentApp, getCurrentAppName, setCurrentAppName } from '../utils/application'
 import { executeScripts, fetchScriptAndExecute, fetchStyleAndReplaceStyleContent, globalLoadedURLs } from '../utils/source'
 import { 
@@ -28,7 +28,7 @@ export function patchDocument() {
     ): HTMLElement {
         const appName = getCurrentAppName()
         const element = originalCreateElement.call(this, tagName, options)
-        appName && element.setAttribute('micro-app-name', appName)
+        appName && element.setAttribute('single-spa-name', appName)
         return element
     }
 
@@ -104,7 +104,7 @@ function patchAddChild(parent: Node, child: any, referenceNode: Node | null, typ
         return addChild(parent, child, referenceNode, type)
     }
     
-    const appName = child.getAttribute('micro-app-name')
+    const appName = child.getAttribute('single-spa-name')
     const app = getApp(appName)
     if (!appName || !app) return addChild(parent, child, referenceNode, type)
 

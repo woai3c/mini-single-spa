@@ -1,6 +1,6 @@
 import { removeStyles } from '../utils/dom'
 import { Application, AppStatus } from '../types'
-import { triggerAppHook } from 'src/utils/application'
+import { triggerAppHook } from '../utils/application'
 
 export default function unMountApp(app: Application): Promise<any> {
     triggerAppHook(app, 'beforeUmount', AppStatus.BEFORE_UNMOUNT)

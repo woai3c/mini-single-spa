@@ -21,7 +21,7 @@ export async function unmount(options) {
 }
 
 if (window.__IS_SINGLE_SPA__) {
-  window.__MICRO_APP__ = {
+  window.__SINGLE_SPA__ = {
     mount,
     unmount
   }

@@ -44,7 +44,7 @@ export function addStyles(styles: string[] | HTMLStyleElement[]) {
 }
 
 export function removeStyles(name: string) {
-    const styles = document.querySelectorAll(`style[micro-app-name="${name}"]`)
+    const styles = document.querySelectorAll(`style[single-spa-name=${name}]`)
     styles.forEach(style => {
         removeNode(style)
     })

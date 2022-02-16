@@ -3,7 +3,7 @@ import { addStyles } from '../utils/dom'
 import { executeScripts, parseHTMLandLoadSources } from '../utils/source'
 import { isFunction, isObject } from '../utils/utils'
 import { AnyObject, Application, AppStatus } from '../types'
-import { triggerAppHook } from 'src/utils/application'
+import { triggerAppHook } from '../utils/application'
 
 export default async function bootstrapApp(app: Application) {
     triggerAppHook(app, 'beforeBootstrap', AppStatus.BEFORE_BOOTSTRAP)
@@ -58,7 +58,7 @@ function validateLifeCycleFunc(name: string, fn: any) {
 }
 
 async function getLifeCycleFuncs(app: Application) {
-    const result = app.sandbox.proxyWindow.__MICRO_APP__
+    const result = app.sandbox.proxyWindow.__SINGLE_SPA__
     if (isFunction(result)) {
         return result()
     }
@@ -68,5 +68,5 @@ async function getLifeCycleFuncs(app: Application) {
     }
 
     // eslint-disable-next-line no-restricted-globals
-    throw Error('The micro app must inject the lifecycle("bootstrap" "mount" "unmount") into window.__MICRO_APP__')
+    throw Error('The micro app must inject the lifecycle("bootstrap" "mount" "unmount") into window.__SINGLE_SPA__')
 }

@@ -43,7 +43,7 @@ export async function unmount() {
 }
 
 if (window.__IS_SINGLE_SPA__) {
-    window.__MICRO_APP__= {
+    window.__SINGLE_SPA__= {
         mount,
         unmount
     }

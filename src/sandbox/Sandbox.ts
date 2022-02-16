@@ -6,7 +6,7 @@ import { temporarySetCurrentAppName } from '../utils/application'
 import { isFunction } from '../utils/utils'
 import { patchDocument, releaseDocument } from './patchDocument'
 import { documentEventMap, patchDocumentEvents, releaseAppDocumentEvents, releaseDocumentEvents } from './patchDocumentEvents'
-import { getEventTypes } from 'src/utils/dom'
+import { getEventTypes } from '../utils/dom'
 import { 
     originalWindowAddEventListener,
     originalWindowRemoveEventListener,
