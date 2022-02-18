@@ -1,6 +1,6 @@
 module.exports = {
   webpack: config => {
-    config.output.publicPath = "//localhost:8002/";
+    config.output.publicPath = '//localhost:8002/';
 
     return config;
   },

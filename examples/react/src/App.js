@@ -11,9 +11,21 @@ import HelloModal from './components/HelloModal';
 import Home from './pages/Home';
 const About = lazy(() => import('./pages/About'));
 
+function getBasePath() {
+  if (window.__IS_SINGLE_SPA__) {
+    if (window.location.pathname.indexOf('/react') === 0) {
+      return '/react'
+    } 
+
+    return '/multiple'
+  }
+
+  return '/'
+}
+
 const RouteExample = () => {
   return (
-    <Router basename={window.__IS_SINGLE_SPA__ ? '/react' : '/'}>
+    <Router basename={ getBasePath() }>
       <nav>
         <Link to="/">Home</Link>
         <Divider type="vertical" />

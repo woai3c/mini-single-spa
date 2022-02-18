@@ -13,11 +13,13 @@
     "install:main": "cd examples/main && pnpm i",
     "install:react": "cd examples/react && pnpm i",
     "install:vue": "cd examples/vue && pnpm i",
-    "install:all": "run-p install:main install:react install:vue install:local",
+    "install:multiple": "cd examples/multiple && pnpm i",
+    "install:all": "run-p install:main install:react install:vue install:multiple install:local",
     "dev:main": "cd examples/main && pnpm dev",
     "dev:react": "cd examples/react && pnpm dev",
     "dev:vue": "cd examples/vue && pnpm dev",
-    "dev:all": "run-p dev dev:react dev:vue dev:main"
+    "dev:multiple": "cd examples/multiple && pnpm dev",
+    "dev:all": "run-p dev dev:react dev:vue dev:multiple dev:main"
   },
   "repository": {
     "type": "git",

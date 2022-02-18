@@ -3,10 +3,10 @@ module.exports = {
         devtool: 'source-map',
     },
     devServer: {
-        port: 8001,
+        port: 8003,
         headers: {
             'Access-Control-Allow-Origin': '*'
         }
     },
-    publicPath: '//localhost:8001/',
+    publicPath: '//localhost:8003/',
 }

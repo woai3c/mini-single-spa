@@ -9,10 +9,12 @@
             <ul class="mainapp-sidemenu">
                 <li @click="push('/vue')">Vue</li>
                 <li @click="push('/react')">React</li>
+                <li @click="push('/multiple')">Multiple</li>
             </ul>
             <!-- 子应用  -->
             <main class="subapp-container">
                 <div id="subapp-viewport"></div>
+                <div id="multiple-app"></div>
             </main>
         </div>
     </div>
@@ -21,9 +23,15 @@
 <script>
 export default {
     name: 'App',
+    data() {
+        return {
+            path: ''
+        }
+    },
     methods: {
-        push(subapp) { 
-            history.pushState(null, subapp, subapp) 
+        push(path) { 
+            this.path = path
+            history.pushState(null, path, path) 
         },
     }
 }

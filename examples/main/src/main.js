@@ -55,8 +55,15 @@ registerApplication({
 registerApplication({
     name: 'react',
     pageEntry: 'http://localhost:8002',
-    activeRule: pathPrefix('/react'),
+    activeRule: (location) => location.pathname.indexOf('/react') === 0 || location.pathname.indexOf('/multiple') === 0,
     container: $('#subapp-viewport')
+})
+
+registerApplication({
+    name: 'multiple',
+    pageEntry: 'http://localhost:8003',
+    activeRule: pathPrefix('/multiple'),
+    container: $('#multiple-app')
 })
 
 start()
