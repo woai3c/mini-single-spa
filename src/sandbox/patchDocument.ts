@@ -4,6 +4,7 @@ import { executeScripts, fetchScriptAndExecute, fetchStyleAndReplaceStyleContent
 import { 
     originalAppendChild,
     originalCreateElement,
+    originalDocument,
     originalGetElementById, 
     originalGetElementsByClassName, 
     originalGetElementsByName, 
@@ -96,7 +97,7 @@ export function releaseDocument() {
     Document.prototype.querySelectorAll = originalQuerySelectorAll
 }
 
-const head = document.head
+const head = originalDocument.head
 const tags = ['STYLE', 'LINK', 'SCRIPT']
 function patchAddChild(parent: Node, child: any, referenceNode: Node | null, type: 'append' | 'insert') {
     const tagName = child.tagName

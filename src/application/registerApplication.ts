@@ -7,12 +7,15 @@ export default function registerApplication(app: Application) {
         app.activeRule = (location = window.location) => location.pathname === path
     }
 
-    app.status = AppStatus.BEFORE_BOOTSTRAP
-    app.pageBody = ''
-    app.loadedURLs = []
-    app.scripts = []
-    app.styles = []
-    app.isFirstLoad = true
+    app = {
+        ...app,
+        status: AppStatus.BEFORE_BOOTSTRAP,
+        pageBody: '',
+        loadedURLs: [],
+        scripts: [],
+        styles: [],
+        isFirstLoad: true,
+    }
     
     appMaps.set(app.name, app)
 }

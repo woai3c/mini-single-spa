@@ -28,11 +28,6 @@ export function getApp(name: string) {
     return appMaps.get(name)
 }
 
-// 当前子应用是否激活
-export function isActive(app: Application) {
-    return isFunction(app.activeRule) && (app.activeRule as Function)(window.location)
-}
-
 export function triggerAppHook<K extends keyof Application>(app: Application, hook: K, status: AppStatus) {
     app.status = status
     if (isFunction(app[hook])) {

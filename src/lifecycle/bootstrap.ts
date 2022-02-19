@@ -19,6 +19,8 @@ export default async function bootstrapApp(app: Application) {
     app.sandbox = new Sandbox(app)
     app.sandbox.start()
     app.container.innerHTML = app.pageBody
+
+    // 执行子应用入口页面的 style script 标签
     addStyles(app.styles)
     executeScripts(app.scripts, app)
     
