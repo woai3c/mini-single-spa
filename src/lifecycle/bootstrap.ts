@@ -4,7 +4,7 @@ import { executeScripts, parseHTMLandLoadSources } from '../utils/source'
 import { isFunction, isObject } from '../utils/utils'
 import { AnyObject, Application, AppStatus } from '../types'
 import { isSandboxEnabled, triggerAppHook } from '../utils/application'
-import { originalWindow } from 'src/utils/originalEnv'
+import { originalWindow } from '../utils/originalEnv'
 
 export default async function bootstrapApp(app: Application) {
     triggerAppHook(app, 'beforeBootstrap', AppStatus.BEFORE_BOOTSTRAP)
