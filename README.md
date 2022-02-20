@@ -5,6 +5,7 @@
 * 支持不同框架的子应用
 * 支持子应用 HTML 入口
 * 支持沙箱功能，子应用 window 作用域隔离、元素隔离
+* 支持子应用样式隔离
 
 ## Examples
 所有示例均在 examples 目录下。
@@ -101,6 +102,11 @@ interface Application {
      * app 访问入口，一个 URL 链接
      */
     pageEntry: string
+    /**
+     * enabled: 是否开启 js 作用域隔离、元素隔离，默认开启
+     * css: 是否开启样式隔离，默认关闭
+     */
+    sandboxConfig: { enabled: boolean, css: boolean }
     /**
      * app 生命周期钩子，加载页面资源前触发，只会触发一次
      */
