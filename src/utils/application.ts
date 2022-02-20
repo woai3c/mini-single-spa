@@ -9,7 +9,7 @@ export function getCurrentAppName() {
 }
 
 export function getCurrentApp() {
-    return currentAppName && appMaps.get(currentAppName)
+    return (currentAppName && appMaps.get(currentAppName)) || null
 }
 
 export function temporarySetCurrentAppName(name: string | null) {
@@ -34,4 +34,8 @@ export function triggerAppHook<K extends keyof Application>(app: Application, ho
         // @ts-ignore
         app[hook]()
     }
+}
+
+export function isSandboxEnabled(app: Application) {
+    return app.sandboxConfig.enabled
 }

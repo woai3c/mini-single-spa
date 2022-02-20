@@ -1,6 +1,6 @@
 import { removeStyles } from '../utils/dom'
 import { Application, AppStatus } from '../types'
-import { triggerAppHook } from '../utils/application'
+import { isSandboxEnabled, triggerAppHook } from '../utils/application'
 
 export default function unMountApp(app: Application): Promise<any> {
     triggerAppHook(app, 'beforeUmount', AppStatus.BEFORE_UNMOUNT)
@@ -8,7 +8,10 @@ export default function unMountApp(app: Application): Promise<any> {
     
     return Promise.resolve(result)
     .then(() => {
-        app.sandbox.stop()
+        if (isSandboxEnabled(app)) {
+            app.sandbox.stop()
+        }
+        
         app.styles = removeStyles(app.name)
         triggerAppHook(app, 'unmounted', AppStatus.UNMOUNTED)
     })

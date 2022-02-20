@@ -13,6 +13,7 @@ import {
     originalQuerySelector,
     originalQuerySelectorAll, 
 } from '../utils/originalEnv'
+import addCSSScope from './addCSSScope'
 
 export function patchDocument() {
     Element.prototype.appendChild = function appendChild<T extends Node>(node: T): any {
@@ -111,6 +112,10 @@ function patchAddChild(parent: Node, child: any, referenceNode: Node | null, typ
 
     // 所有的 style 都放到 head 下
     if (tagName === 'STYLE') {
+        if (app.sandboxConfig.css) {
+            addCSSScope(child, app)
+        }
+
         return addChild(head, child, referenceNode, type)
     }
 
@@ -151,7 +156,7 @@ function patchAddChild(parent: Node, child: any, referenceNode: Node | null, typ
         const style = document.createElement('style')
         style.setAttribute('type', 'text/css')
 
-        fetchStyleAndReplaceStyleContent(style, href)
+        fetchStyleAndReplaceStyleContent(style, href, app)
 
         return addChild(head, style, referenceNode, type)
     }

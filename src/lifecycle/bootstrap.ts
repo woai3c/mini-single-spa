@@ -3,7 +3,8 @@ import { addStyles } from '../utils/dom'
 import { executeScripts, parseHTMLandLoadSources } from '../utils/source'
 import { isFunction, isObject } from '../utils/utils'
 import { AnyObject, Application, AppStatus } from '../types'
-import { triggerAppHook } from '../utils/application'
+import { isSandboxEnabled, triggerAppHook } from '../utils/application'
+import { originalWindow } from 'src/utils/originalEnv'
 
 export default async function bootstrapApp(app: Application) {
     triggerAppHook(app, 'beforeBootstrap', AppStatus.BEFORE_BOOTSTRAP)
@@ -16,8 +17,12 @@ export default async function bootstrapApp(app: Application) {
         throw error
     }
 
-    app.sandbox = new Sandbox(app)
-    app.sandbox.start()
+    // 开启沙箱
+    if (isSandboxEnabled(app)) {
+        app.sandbox = new Sandbox(app)
+        app.sandbox.start()
+    }
+    
     app.container.innerHTML = app.pageBody
 
     // 执行子应用入口页面的 style script 标签
@@ -41,8 +46,11 @@ export default async function bootstrapApp(app: Application) {
     
     // 子应用首次加载的脚本执行完就不再需要了
     app.scripts.length = 0
-    // 记录当前的 window 快照，重新挂载子应用时恢复
-    app.sandbox.recordWindowSnapshot()
+
+    if (isSandboxEnabled(app)) {
+        // 记录当前的 window 快照，重新挂载子应用时恢复
+        app.sandbox.recordWindowSnapshot()
+    }
     
     triggerAppHook(app, 'bootstrapped', AppStatus.BOOTSTRAPPED)
 }
@@ -60,7 +68,11 @@ function validateLifeCycleFunc(name: string, fn: any) {
 }
 
 async function getLifeCycleFuncs(app: Application) {
-    const result = app.sandbox.proxyWindow.__SINGLE_SPA__
+    let result = originalWindow.__SINGLE_SPA__
+    if (isSandboxEnabled(app)) {
+        result = app.sandbox.proxyWindow.__SINGLE_SPA__
+    }
+     
     if (isFunction(result)) {
         return result()
     }

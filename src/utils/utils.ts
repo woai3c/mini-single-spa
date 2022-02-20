@@ -1,3 +1,5 @@
+import { originalDocument, originalWindow } from './originalEnv'
+
 export function isPromise(fn: any) {
     if ((isObject(fn) || isFunction(fn)) && isFunction(fn.then)) {
         return true
@@ -20,4 +22,8 @@ export function $(selector: string) {
 
 export function nextTick(callback: () => void) {
     Promise.resolve().then(callback)
+}
+
+export function isInBrowser() {
+    return typeof originalWindow === 'object' && typeof originalDocument === 'object'
 }

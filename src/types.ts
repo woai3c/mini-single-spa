@@ -71,6 +71,11 @@ export interface Application {
      */
     pageBody: string
     /**
+     * enabled: 是否开启 js 作用域隔离、元素隔离，默认开启
+     * css: 是否开启样式隔离，默认关闭
+     */
+    sandboxConfig: { enabled: boolean, css: boolean }
+    /**
      * app 的 js 运行沙箱
      */
     sandbox: Sandbox

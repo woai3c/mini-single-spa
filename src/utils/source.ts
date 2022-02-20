@@ -1,6 +1,7 @@
+import addCSSScope from '../sandbox/addCSSScope'
 import { Application, Source } from '../types'
 import { createElement, removeNode } from './dom'
-import { originalAppendChild } from './originalEnv'
+import { originalAppendChild, originalWindow } from './originalEnv'
 import { isFunction } from './utils'
 
 const urlReg = /^http(s)?:\/\//
@@ -202,26 +203,33 @@ export function executeScripts(scripts: string[], app: Application) {
                 code = app.loader(code)
             }
             
-            // ts 使用 with 会报错，所以需要这样包一下
-            // 将子应用的 js 代码全局 window 环境指向代理环境 proxyWindow
-            const warpCode = `
-                ;(function(proxyWindow){
-                    with (proxyWindow) {
-                        (function(window){${code}\n}).call(proxyWindow, proxyWindow)
-                    }
-                })(this);
-            `
+            if (app.sandboxConfig?.enabled) {
+                // ts 使用 with 会报错，所以需要这样包一下
+                // 将子应用的 js 代码全局 window 环境指向代理环境 proxyWindow
+                const warpCode = `
+                    ;(function(proxyWindow){
+                        with (proxyWindow) {
+                            (function(window){${code}\n}).call(proxyWindow, proxyWindow)
+                        }
+                    })(this);
+                `
 
-            new Function(warpCode).call(app.sandbox.proxyWindow)
+                new Function(warpCode).call(app.sandbox.proxyWindow)
+            } else {
+                new Function('window', code).call(originalWindow, originalWindow)
+            }
         })
     } catch (error) {
         throw error
     }
 }
 
-export async function fetchStyleAndReplaceStyleContent(style: Node, url: string) {
+export async function fetchStyleAndReplaceStyleContent(style: HTMLStyleElement, url: string, app: Application) {
     const content = await loadSourceText(url)
     style.textContent = content
+    if (app.sandboxConfig?.css) {
+        addCSSScope(style, app)
+    }
 }
 
 export async function fetchScriptAndExecute(url: string, app: Application) {
