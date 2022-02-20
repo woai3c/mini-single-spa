@@ -19,6 +19,10 @@ registerApplication({
     pageEntry: 'http://localhost:8001',
     activeRule: pathPrefix('/vue'),
     container: $('#subapp-viewport'),
+    sandboxConfig: {
+        enabled: true,
+        css: true
+    },
     /**
      * app 生命周期钩子，加载页面资源前触发，只会触发一次
      */
@@ -56,14 +60,22 @@ registerApplication({
     name: 'react',
     pageEntry: 'http://localhost:8002',
     activeRule: (location) => location.pathname.indexOf('/react') === 0 || location.pathname.indexOf('/multiple') === 0,
-    container: $('#subapp-viewport')
+    container: $('#subapp-viewport'),
+    sandboxConfig: {
+        enabled: true,
+        css: true
+    }
 })
 
 registerApplication({
     name: 'multiple',
     pageEntry: 'http://localhost:8003',
     activeRule: pathPrefix('/multiple'),
-    container: $('#multiple-app')
+    container: $('#multiple-app'),
+    sandboxConfig: {
+        enabled: true,
+        css: true
+    }
 })
 
 start()
