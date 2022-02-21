@@ -2,6 +2,7 @@
   <div class="home">
     <img alt="Vue logo" :src="img" />
     <button @click="sayHi">hello</button>
+    <button @click="emit">发送一个全局事件</button>
     <HelloWorld msg="Welcome to Your Vue.js App" />
   </div>
 </template>
@@ -23,6 +24,10 @@ export default {
   methods: {
     sayHi() {
       alert('hello')
+    },
+
+    emit() {
+      window.spaGlobalState.emit('vue')
     }
   }
 }

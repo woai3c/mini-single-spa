@@ -3,6 +3,8 @@
         <!-- 标题栏 -->
         <header class="mainapp-header">
             <h1>single-spa</h1>
+            <button @click="setGlobalState">给全局状态设置一个属性</button>
+            <button @click="emit">发送一个全局事件</button>
         </header>
         <div class="mainapp-main">
             <!-- 侧边栏 -->
@@ -33,6 +35,14 @@ export default {
             this.path = path
             history.pushState(null, path, path) 
         },
+
+        setGlobalState() {
+            window.spaGlobalState.set('msg', '父应用在 spa 全局状态上新增了一个 msg 属性')
+        },
+
+        emit() {
+            window.spaGlobalState.emit('testEvent', '父应用发送了一个全局事件: testEvent')
+        }
     }
 }
 </script>
@@ -45,6 +55,11 @@ body {
 .mainapp {
     font-family: -apple-system, BlinkMacSystemFont, Segoe UI, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Helvetica Neue, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji, Segoe UI Symbol;
     line-height: 1;
+}
+
+.mainapp-header {
+    display: flex;
+    align-items: center;
 }
 
 .mainapp-header h1 {
