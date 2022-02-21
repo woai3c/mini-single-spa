@@ -1,10 +1,8 @@
-import { appMaps } from '../utils/application'
+import { appMaps, isActive } from '../utils/application'
 import bootstrapApp from '../lifecycle/bootstrap'
 import mountApp from '../lifecycle/mount'
 import unMountApp from '../lifecycle/unmount'
 import { Application, AppStatus } from '../types'
-import { isFunction } from '../utils/utils'
-import { originalWindow } from '../utils/originalEnv'
 
 export async function loadApps() {
     const toLoadApp = getAppsWithStatus(AppStatus.BEFORE_BOOTSTRAP)
@@ -41,9 +39,4 @@ function getAppsWithStatus(status: AppStatus) {
     })
 
     return result
-}
-
-// 当前子应用是否激活
-function isActive(app: Application) {
-    return isFunction(app.activeRule) && (app.activeRule as Function)(originalWindow.location)
 }

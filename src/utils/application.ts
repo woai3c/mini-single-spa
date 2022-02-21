@@ -1,4 +1,5 @@
 import { Application, AppStatus } from '../types'
+import { originalWindow } from './originalEnv'
 import { isFunction, nextTick } from './utils'
 
 export const appMaps = new Map<string, Application>()
@@ -38,4 +39,9 @@ export function triggerAppHook<K extends keyof Application>(app: Application, ho
 
 export function isSandboxEnabled(app: Application) {
     return app.sandboxConfig.enabled
+}
+
+// 当前子应用是否激活
+export function isActive(app: Application) {
+    return isFunction(app.activeRule) && (app.activeRule as Function)(originalWindow.location)
 }
