@@ -96,6 +96,7 @@ window.spaGlobalState.emit('testEvent', '父应用发送了一个全局事件: t
 // 子应用
 window.spaGlobalState.on('testEvent', () => alert('vue 子应用监听到父应用发送了一个全局事件: testEvent'))
 ```
+**注意**，子应用设置的全局状态、事件会在卸载时清除，并且不会保存快照。所以建议将状态、事件相关操作放在 `mount()` 函数执行时或之后。
 #### 全局状态、事件 API
 ```ts
 // 状态相关
