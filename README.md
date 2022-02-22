@@ -77,6 +77,42 @@ module.exports = {
 }
 ```
 
+### 全局状态、全局事件
+在父子应用上均可以使用 `window.spaGlobalState` 来设置、监听全局状态：
+```js
+// 父应用
+window.spaGlobalState.set('msg', '父应用在 spa 全局状态上新增了一个 msg 属性')
+
+// 子应用（全局状态、事件不会生成快照和恢复，所以要在 mount() 调用后使用）
+window.spaGlobalState.onChange((state, operator, key) => {
+    alert(`vue 子应用监听到 spa 全局状态发生了变化: ${JSON.stringify(state)}，操作: ${operator}，变化的属性: ${key}`)
+})
+```
+也可以使用全局事件：
+```js
+// 父应用
+window.spaGlobalState.emit('testEvent', '父应用发送了一个全局事件: testEvent')
+
+// 子应用
+window.spaGlobalState.on('testEvent', () => alert('vue 子应用监听到父应用发送了一个全局事件: testEvent'))
+```
+#### 全局状态、事件 API
+```ts
+// 状态相关
+set(key: string, value: any): void;
+get(key: string): any;
+getAll(): AnyObject;
+delete(key: string): void;
+clear(): void;
+onChange(callback: Callback): void;
+
+// 事件相关
+on(event: string, callback: Callback): void;
+off(event: string, callback: Callback): void;
+emit(event: string, ...args: any): void;
+once(event: string, callback: Callback): void;
+```
+
 ### registerApplication(Application)
 `registerApplication(Application)` 接收的参数如下：
 ```ts
