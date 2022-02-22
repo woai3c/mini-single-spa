@@ -31,6 +31,17 @@ function render(options = {}) {
 
 
 export async function mount(options) {
+    // 全局状态、事件不会生成快照，所以要在 mount() 调用后使用
+    window.spaGlobalState.onChange((state, operator, key) => {
+        alert(`vue 子应用监听到 spa 全局状态发生了变化: ${JSON.stringify(state)}，操作: ${operator}，变化的属性: ${key}`)
+    })
+
+    window.spaGlobalState.onChange((state, operator, key) => {
+        alert(`第二个 onChange: vue 子应用监听到 spa 全局状态发生了变化: ${JSON.stringify(state)}，操作: ${operator}，变化的属性: ${key}`)
+    })
+
+    window.spaGlobalState.on('testEvent', () => alert('vue 子应用监听到父应用发送了一个全局事件: testEvent'))
+    
     console.log('[vue] options from main framework', options)
     render(options)
 }
@@ -67,16 +78,6 @@ if (window.__IS_SINGLE_SPA__) {
     setTimeout(() => {
         console.log('setTimeout')
     }, 3000)
-
-    window.spaGlobalState.onChange((state, operator, key) => {
-        alert(`vue 子应用监听到 spa 全局状态发生了变化: ${JSON.stringify(state)}，操作: ${operator}，变化的属性: ${key}`)
-    })
-
-    window.spaGlobalState.onChange((state, operator, key) => {
-        alert(`第二个 onChange: vue 子应用监听到 spa 全局状态发生了变化: ${JSON.stringify(state)}，操作: ${operator}，变化的属性: ${key}`)
-    })
-
-    window.spaGlobalState.on('testEvent', () => alert('vue 子应用监听到父应用发送了一个全局事件: testEvent'))
 } else {
     render()
 }
