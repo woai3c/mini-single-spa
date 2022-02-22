@@ -41,7 +41,7 @@ export function isSandboxEnabled(app: Application) {
     return app.sandboxConfig.enabled
 }
 
-// 当前子应用是否激活
+// 当前子应用的激活规则是否和 url 是否匹配
 export function isActive(app: Application) {
     return isFunction(app.activeRule) && (app.activeRule as Function)(originalWindow.location)
 }

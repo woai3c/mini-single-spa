@@ -1,11 +1,13 @@
 import { getApp, getCurrentAppName, isActive } from 'src/utils/application'
 import { isFunction } from 'src/utils/utils'
-import { Application } from '../types'
+import { Application, AppStatus } from '../types'
+
+type Callback = (...args: any) => void
 
 export default class EventBus {
-    private eventsMap: Map<string, Record<string, Array<(...args: any) => void>>> = new Map()
+    private eventsMap: Map<string, Record<string, Array<Callback>>> = new Map()
 
-    on(event: string, callback: (...args: any) => void) {
+    on(event: string, callback: Callback) {
         if (!isFunction(callback)) {
             throw Error(`The second param ${typeof callback} is not a function`)
         }
@@ -19,13 +21,13 @@ export default class EventBus {
 
         const events = eventsMap.get(appName)!
         if (!events[event]) {
-            events[event] = []
+            events[event] = [] 
         }
 
         events[event].push(callback)
     }
 
-    off(event: string, callback: Function) {
+    off(event: string, callback: Callback) {
         const appName = getCurrentAppName() || 'parent'
 
         const { eventsMap } = this
@@ -52,7 +54,8 @@ export default class EventBus {
              * 如果是点击其他子应用或父应用触发全局数据变更，则当前打开的子应用获取到的 app 为 null
              * 所以需要改成用 activeRule 来判断当前子应用是否运行
              */
-            if (appName === 'parent' || isActive(getApp(appName) as Application)) {
+            const app = getApp(appName) as Application
+            if (appName === 'parent' || (isActive(app) && app.status === AppStatus.MOUNTED)) {
                 if (events[event]?.length) {
                     for (const callback of events[event]) {
                         callback.call(this, ...args)
@@ -62,7 +65,7 @@ export default class EventBus {
         })
     }
 
-    once(event: string, callback: Function) {
+    once(event: string, callback: Callback) {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const self = this
 
@@ -72,5 +75,9 @@ export default class EventBus {
         }
 
         this.on(event, wrap)
+    }
+
+    clearEventsByAppName(appName: string) {
+        this.eventsMap.set(appName, {})
     }
 }

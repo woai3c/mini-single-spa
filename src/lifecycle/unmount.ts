@@ -1,6 +1,7 @@
 import { removeStyles } from '../utils/dom'
 import { Application, AppStatus } from '../types'
 import { isSandboxEnabled, triggerAppHook } from '../utils/application'
+import { originalWindow } from 'src/utils/originalEnv'
 
 export default function unMountApp(app: Application): Promise<any> {
     triggerAppHook(app, 'beforeUmount', AppStatus.BEFORE_UNMOUNT)
@@ -12,7 +13,11 @@ export default function unMountApp(app: Application): Promise<any> {
             app.sandbox.stop()
         }
         
+        // 移除子应用样式
         app.styles = removeStyles(app.name)
+        // 移除子应用的全局状态、事件
+        originalWindow.spaGlobalState.clearGlobalStateByAppName(app.name)
+
         triggerAppHook(app, 'unmounted', AppStatus.UNMOUNTED)
     })
     .catch((err: Error) => {
