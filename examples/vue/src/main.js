@@ -21,18 +21,7 @@ function render(options = {}) {
         router,
         store,
         render: h => h(App),
-    }).$mount(container ? helper(container) : '#app')
-
-    function helper(container) {
-        let div = container.querySelector('#app')
-        if (!div) {
-            div = document.createElement('div')
-            div.id = 'app'
-            container.appendChild(div)
-        }
-
-        return div
-    }
+    }).$mount(container ? container.querySelector('#app') : '#app')
 }
 
 export async function bootstrap() {

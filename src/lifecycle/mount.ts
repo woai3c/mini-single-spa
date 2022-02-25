@@ -3,6 +3,8 @@ import { Application, AppStatus } from '../types'
 
 export default function mountApp(app: Application): Promise<any> {
     app.status = AppStatus.BEFORE_MOUNT
+    app.container.innerHTML = app.pageBody
+    
     let result = (app as any).mount({ props: app.props, container: app.container })
     if (!isPromise(result)) {
         result = Promise.resolve(result)

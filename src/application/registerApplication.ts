@@ -7,6 +7,8 @@ export default function registerApplication(app: Application) {
         app.activeRule = (location = window.location) => location.pathname === path
     }
 
+    app.pageBody = ''
+    app.loadedURLs = []
     app.status = AppStatus.BEFORE_BOOTSTRAP
     apps.push(app)
 }

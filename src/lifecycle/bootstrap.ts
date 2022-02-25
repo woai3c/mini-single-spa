@@ -7,7 +7,7 @@ declare const window: any
 export default async function bootstrapApp(app: Application) {
     try {
         // 加载 js css
-        await parseHTMLandloadSources(app.pageEntry)
+        await parseHTMLandloadSources(app)
     } catch (error) {
         throw error
     }

@@ -6,18 +6,7 @@ import * as serviceWorker from './serviceWorker';
 function render(options = {}) {
   const { container } = options;
 
-  function helper(container) {
-      let div = container.querySelector('#root')
-      if (!div) {
-        div = document.createElement('div')
-        div.id = 'root'
-        container.appendChild(div)
-      }
-
-      return div
-  }
-
-  ReactDOM.render(<App />, container ? helper(container) : document.querySelector('#root'));
+  ReactDOM.render(<App />, container ? container.querySelector('#root'): document.querySelector('#root'));
 }
 
 export async function bootstrap() {
