@@ -76,7 +76,7 @@ interface Application {
     activeRule: Function | string
 
     // 传给子应用的自定义参数
-    customProps: AnyObject
+    props: AnyObject
 
     /**
      * loadApp() 必须返回一个 Promise，resolve() 后得到一个对象：
