@@ -26,8 +26,12 @@ pnpm dev:all
 
 ## 使用
 ### 安装
-```
+```bash
 npm i mini-single-spa
+# or
+pnpm i mini-single-spa
+# or
+yarn add mini-single-spa
 ```
 
 ### 主应用
