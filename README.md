@@ -2,7 +2,7 @@
 一个微前端教学项目
 
 ## 原理分析
-原理分析文章正在编写...
+* [手把手教你写一个简易的微前端框架 ](https://github.com/woai3c/Front-end-articles/issues/31)
 
 ## 功能
 * 支持不同框架的子应用
