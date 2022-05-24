@@ -16,7 +16,7 @@
 ### 运行 demo
 安装
 ```
-pnpm install:all
+pnpm install --frozen-lockfile && pnpm install:all
 ```
 运行开发环境
 ```
