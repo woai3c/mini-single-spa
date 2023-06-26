@@ -13,7 +13,7 @@
 
 ## Examples
 所有示例均在 examples 目录下。
-### 运行 demo
+### 运行示例
 安装
 ```
 pnpm install --frozen-lockfile && pnpm install:all
